@@ -375,26 +375,70 @@ def report_cmd(
 def regen_cmd(
     teacher: str = typer.Option(..., "--teacher", help="Open teacher model key for regeneration."),
     dataset_id: str = typer.Option(..., "--dataset", "-d", help="Dataset ID."),
+    fake: bool = typer.Option(False, "--fake", help="Run with mock teacher model."),
 ):
     """Run teacher regeneration on train split using an open teacher model."""
+    from openswitch.datasets.regen import regenerate_teacher_references
+    from openswitch.providers.fake import FakeProvider
+    from openswitch.providers.registry import registry
+
+    if fake and teacher not in registry:
+        registry.register(
+            teacher, FakeProvider(default_response="Teacher regenerated reference response.")
+        )
+
     console.print(
         f"[bold cyan]Regenerating train references using open teacher {teacher}...[/bold cyan]"
     )
-    console.print(
-        "[green][OK] Provenance guard verified: closed_api outputs strictly excluded.[/green]"
-    )
+
+    async def _regen():
+        return await regenerate_teacher_references(dataset_id=dataset_id, teacher_model_key=teacher)
+
+    summary = asyncio.run(_regen())
+    console.print("[green][OK] Teacher regeneration complete![/green]")
+    console.print(f"  • Total train rows: {summary.total_train_rows}")
+    console.print(f"  • Regenerated rows: {summary.regenerated_count}")
+    console.print(f"  • Teacher model: {summary.teacher_model_key} ({summary.teacher_license})")
 
 
 @app.command("finetune")
 def finetune_cmd(
     base: str = typer.Option(..., "--base", help="Base model key for fine-tuning."),
     dataset_id: str = typer.Option(..., "--dataset", "-d", help="Dataset ID."),
+    dry_run: bool = typer.Option(
+        True, "--dry-run/--execute", help="Run dry-run simulation or real Tinker job."
+    ),
 ):
     """Launch LoRA fine-tuning on provenance-compliant train rows."""
+    from sqlalchemy import select
+    from openswitch.db import session_context
+    from openswitch.finetune.tinker import TinkerFineTuner
+    from openswitch.models import Example
+
+    async def _finetune():
+        async with session_context() as session:
+            res = await session.execute(
+                select(Example).where(Example.dataset_id == dataset_id, Example.split == "train")
+            )
+            examples = list(res.scalars().all())
+
+        tuner = TinkerFineTuner()
+        return await tuner.run_training(base_model=base, train_examples=examples, dry_run=dry_run)
+
     console.print(
-        f"[bold cyan]Preparing fine-tuning for base model {base} on dataset {dataset_id}...[/bold cyan]"
+        f"[bold cyan]Launching fine-tune for base {base} on dataset {dataset_id}...[/bold cyan]"
     )
-    console.print("[green][OK] Provenance verification passed: 100% compliant train rows.[/green]")
+    try:
+        job = asyncio.run(_finetune())
+        console.print("[green][OK] Fine-tune job completed successfully![/green]")
+        console.print(f"  • Job ID: {job.job_id}")
+        console.print(f"  • Train rows: {job.train_rows_count}")
+        console.print(f"  • Cost: ${job.cost_usd:.4f}")
+        console.print(f"  • Time: {job.time_seconds:.1f}s")
+        console.print(f"  • Sampler: {job.sampler_endpoint}")
+    except Exception as e:
+        console.print(f"[bold red]Fine-tune failed:[/bold red] {e}")
+        raise typer.Exit(code=1)
 
 
 @models_app.command("probe")
