@@ -1,0 +1,29 @@
+# VERIFY every base_url, model_id, license and price against the provider's docs before use.
+# Do not guess. Record source_url and verified_on. Leave UNVERIFIED if you cannot confirm.
+providers:
+  ollama:
+    kind: openai_compat
+    base_url: http://localhost:11434/v1
+    api_key_env: ""
+    local: true
+  digitalocean:
+    kind: openai_compat
+    base_url: UNVERIFIED   # read https://docs.digitalocean.com/products/gradient-ai-platform/ (serverless inference)
+    api_key_env: DO_MODEL_ACCESS_KEY
+    local: false
+  backboard:
+    kind: UNVERIFIED       # openai_compat or custom adapter; read https://backboard.io/hackathons
+    api_key_env: BACKBOARD_API_KEY
+    local: false
+  tinker:
+    kind: tinker           # fine-tuned model sampling; verify in https://tinker-docs.thinkingmachines.ai/
+    api_key_env: TINKER_API_KEY
+    local: false
+models:
+  # role: candidate | judge | teacher | baseline_label
+  - { key: gemma-hosted,   provider: digitalocean, model_id: UNVERIFIED, family: gemma, license: UNVERIFIED, role: candidate }
+  - { key: gemma-local,    provider: ollama,       model_id: UNVERIFIED, family: gemma, license: UNVERIFIED, role: candidate }
+  - { key: open-model-b,   provider: backboard,    model_id: UNVERIFIED, family: UNVERIFIED, license: UNVERIFIED, role: candidate }
+  - { key: open-model-c,   provider: backboard,    model_id: UNVERIFIED, family: UNVERIFIED, license: UNVERIFIED, role: candidate }
+  - { key: open-judge,     provider: UNVERIFIED,   model_id: UNVERIFIED, family: UNVERIFIED, license: UNVERIFIED, role: judge }
+  - { key: open-teacher,   provider: UNVERIFIED,   model_id: UNVERIFIED, family: UNVERIFIED, license: UNVERIFIED, role: teacher }

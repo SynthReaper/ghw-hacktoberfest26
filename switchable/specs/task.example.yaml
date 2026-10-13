@@ -1,0 +1,28 @@
+# One task file per dataset. Declare the primary metric BEFORE running (prevents metric shopping).
+name: support-ticket-triage
+type: extraction            # classification | extraction | freeform
+description: "Triage a support ticket into strict JSON."
+output:
+  format: json
+  schema:
+    type: object
+    required: [category, priority, sentiment, summary]
+    additionalProperties: false
+    properties:
+      category: { enum: [billing, bug, feature_request, account, shipping, other] }
+      priority: { enum: [low, medium, high, urgent] }
+      sentiment: { enum: [negative, neutral, positive] }
+      summary: { type: string, maxLength: 240 }
+metrics:
+  deterministic: [json_valid, schema_valid, field_accuracy]
+  critical_fields: [category, priority]       # primary composite = valid AND all critical fields correct
+  judge_fields: [summary]                     # judged pairwise vs reference
+primary_metric: composite_critical_fields_correct
+rubric: |
+  Judge whether the candidate summary is faithful to the ticket, covers the key issue,
+  and does not add facts. Ignore style and length.
+parity_threshold: 0.85
+split: { train: 0.6, dev: 0.1, test: 0.3, seed: 1337 }
+generation:
+  temperature: 0
+  max_tokens: 400

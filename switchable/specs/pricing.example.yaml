@@ -1,0 +1,14 @@
+# Prices are per 1M tokens in USD. NEVER fill from memory; copy from the provider's pricing page.
+# Anything missing or older than 30 days triggers a warning in the UI and report.
+version: 1
+baseline:
+  label: "Incumbent (user-entered)"
+  price_in_per_mtok: null
+  price_out_per_mtok: null
+  source_url: null
+  verified_on: null
+  # or set a flat number instead:
+  flat_cost_per_request: null
+models:
+  gemma-hosted: { price_in_per_mtok: null, price_out_per_mtok: null, source_url: null, verified_on: null }
+  gemma-local:  { price_in_per_mtok: 0,    price_out_per_mtok: 0,    source_url: "local", verified_on: null, note: "excludes hardware/electricity" }

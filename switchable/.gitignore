@@ -35,9 +35,6 @@ wheels/
 *.sqlite3
 /var/data/
 data/cache/
-docs/
-AGENTS.md
-CLAUDE.md
 
 # Testing & Quality
 .pytest_cache/
