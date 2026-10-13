@@ -408,36 +408,44 @@ def finetune_cmd(
     dry_run: bool = typer.Option(
         True, "--dry-run/--execute", help="Run dry-run simulation or real Tinker job."
     ),
+    compare_kshot: bool = typer.Option(
+        True, "--compare-kshot/--no-kshot", help="Compare against zero-shot and k-shot baseline."
+    ),
+    out: Path | None = typer.Option(
+        None, "--out", "-o", help="Path to write comparison JSON evidence."
+    ),
 ):
-    """Launch LoRA fine-tuning on provenance-compliant train rows."""
-    from sqlalchemy import select
-    from openswitch.db import session_context
-    from openswitch.finetune.tinker import TinkerFineTuner
-    from openswitch.models import Example
-
-    async def _finetune():
-        async with session_context() as session:
-            res = await session.execute(
-                select(Example).where(Example.dataset_id == dataset_id, Example.split == "train")
-            )
-            examples = list(res.scalars().all())
-
-        tuner = TinkerFineTuner()
-        return await tuner.run_training(base_model=base, train_examples=examples, dry_run=dry_run)
+    """Launch LoRA fine-tuning and compare against zero-shot and k-shot baselines."""
+    from rich.markdown import Markdown
+    from openswitch.finetune.eval import run_finetune_vs_kshot
 
     console.print(
-        f"[bold cyan]Launching fine-tune for base {base} on dataset {dataset_id}...[/bold cyan]"
+        f"[bold cyan]Evaluating fine-tuning on base {base} for dataset {dataset_id}...[/bold cyan]"
     )
+
     try:
-        job = asyncio.run(_finetune())
-        console.print("[green][OK] Fine-tune job completed successfully![/green]")
-        console.print(f"  • Job ID: {job.job_id}")
-        console.print(f"  • Train rows: {job.train_rows_count}")
-        console.print(f"  • Cost: ${job.cost_usd:.4f}")
-        console.print(f"  • Time: {job.time_seconds:.1f}s")
-        console.print(f"  • Sampler: {job.sampler_endpoint}")
+        report = asyncio.run(
+            run_finetune_vs_kshot(
+                dataset_id=dataset_id,
+                base_model=base,
+                dry_run=dry_run,
+            )
+        )
+        console.print("[green][OK] Fine-tune and baseline comparison complete![/green]\n")
+        console.print(Markdown(report.to_markdown_table()))
+        console.print(f"\n[bold yellow]Recommendation:[/bold yellow] {report.recommendation}")
+        if report.breakeven_volume_kshot_vs_ft:
+            console.print(
+                f"[bold cyan]Break-even volume:[/bold cyan] {report.breakeven_volume_kshot_vs_ft:,} requests"
+            )
+
+        if out:
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(json.dumps(report.to_dict(), indent=2), encoding="utf-8")
+            console.print(f"[dim]Saved report to {out}[/dim]")
+
     except Exception as e:
-        console.print(f"[bold red]Fine-tune failed:[/bold red] {e}")
+        console.print(f"[bold red]Fine-tune evaluation failed:[/bold red] {e}")
         raise typer.Exit(code=1)
 
 

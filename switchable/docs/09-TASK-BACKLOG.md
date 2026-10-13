@@ -30,8 +30,8 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 
 ## P2 — Fine-tune, calibration, product surface (Fri Oct 16)
 - [x] **T-020 [A] Provenance guard + teacher regen.** Hard block on `train_allowed=false`; `regen --teacher`. *AC:* test proves closed_api rows never reach the trainer; regen rows flagged `open_model`. (2h)
-- [ ] **T-021 [A] Tinker fine-tune.** Train on Task B train split, evaluate on test, record cost/time. Use the dev split for any choices. *AC:* result row in `finetunes`; comparison table generated. (3h + run time)
-- [ ] **T-022 [A] k-shot baseline.** TF-IDF nearest examples, k=3..8, dev-split selection. *AC:* baseline appears in the comparison. (1.5h)
+- [x] **T-021 [A] Tinker fine-tune.** Train on Task B train split, evaluate on test, record cost/time. Use the dev split for any choices. *AC:* result row in `finetunes`; comparison table generated. (3h + run time)
+- [x] **T-022 [A] k-shot baseline.** TF-IDF nearest examples, k=3..8, dev-split selection. *AC:* baseline appears in the comparison. (1.5h)
 - [ ] **T-023 [H+A] Calibration.** Blind labelling UI/CLI, agreement and kappa, banner logic. Human labels ≥ 20 items. *AC:* kappa computed and shown in the report. (2h + 30 min human)
 - [ ] **T-024 [A] FastAPI + SSE.** Endpoints in doc 03 §8; session cookie; progress stream. *AC:* integration test creates an experiment and receives events. (3h)
 - [ ] **T-025 [A] Web UI.** Upload/validate, model select + prices + volume, progress, report, calibration, fine-tune view. HTMX, no JS build. *AC:* sample dataset flows end to end by clicking; keyboard accessible. (4h)
