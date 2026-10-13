@@ -17,8 +17,15 @@ class ProviderRegistry:
         self._providers: dict[str, ChatProvider] = {}
         self._configs: dict[str, dict[str, Any]] = {}
 
+    def __contains__(self, name: str) -> bool:
+        return name in self._providers or name in self._configs
+
     def register_provider(self, name: str, provider: ChatProvider) -> None:
         self._providers[name] = provider
+
+    def register(self, name: str, provider: ChatProvider) -> None:
+        """Alias for register_provider."""
+        self.register_provider(name, provider)
 
     def get(self, name: str) -> ChatProvider:
         if name in self._providers:
