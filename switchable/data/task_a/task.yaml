@@ -1,0 +1,18 @@
+name: banking77_subset
+type: classification
+primary_metric: label_accuracy
+deterministic: true
+labels:
+- card_arrival
+- change_pin
+- cancel_transfer
+- exchange_rate
+- lost_or_stolen_card
+- verify_source_of_funds
+- automatic_top_up
+- atm_support
+- balance_inquiry
+- pending_top_up
+license: CC-BY-4.0
+source: PolyAI Banking77 Benchmark
+n_rows: 150
