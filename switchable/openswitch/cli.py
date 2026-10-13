@@ -283,48 +283,116 @@ def judge_cmd(
 
 @app.command("calibrate")
 def calibrate_cmd(
-    labels_file: Path = typer.Option(
-        ...,
+    labels_file: Path | None = typer.Option(
+        None,
         "--file",
         "-f",
         help="Path to JSON file containing paired labels: [{'human': 'win', 'judge': 'win'}, ...].",
     ),
+    interactive: bool = typer.Option(
+        False,
+        "--interactive",
+        "-i",
+        help="Launch interactive blind labelling session in terminal.",
+    ),
+    sample_size: int = typer.Option(
+        20,
+        "--sample-size",
+        "-n",
+        help="Number of blind pairs to label (default 20).",
+    ),
+    out: Path | None = typer.Option(
+        None,
+        "--out",
+        "-o",
+        help="Path to save calibration analysis results JSON.",
+    ),
 ):
     """Calculate Cohen's kappa and judge reliability gating against human ground truth."""
-    if not labels_file.exists():
-        console.print(f"[bold red]File not found:[/bold red] {labels_file}")
-        raise typer.Exit(code=1)
+    from openswitch.judge.calibration_flow import (
+        analyze_calibration,
+        map_human_choice_to_verdict,
+        sample_blind_pairs,
+        save_human_label,
+    )
 
-    with open(labels_file, encoding="utf-8") as f:
-        data = json.load(f)
+    paired_data: list[dict[str, str]] = []
 
-    human = [d["human"] for d in data]
-    judge = [d["judge"] for d in data]
+    if interactive:
+        console.print(f"[bold cyan]Starting blind judge calibration session ({sample_size} pairs)...[/bold cyan]")
+        pairs = asyncio.run(sample_blind_pairs(sample_size=sample_size))
+        if not pairs:
+            console.print("[yellow][WARN] No evaluated judge pairs found in database to calibrate.[/yellow]")
+            raise typer.Exit(code=1)
 
-    agreement = calculate_agreement(human, judge)
-    kappa = calculate_cohen_kappa(human, judge)
-    tier, banner = judge_reliability_tier(kappa)
-    cm = compute_confusion_matrix(human, judge)
+        for i, pair in enumerate(pairs, 1):
+            console.rule(f"[bold]Pair {i}/{len(pairs)}[/bold]")
+            console.print(f"[bold dim]Input prompt:[/bold dim]\n{pair.input_text}\n")
+            console.print(Panel(pair.option_a_text, title="[bold cyan]Option A[/bold cyan]"))
+            console.print(Panel(pair.option_b_text, title="[bold magenta]Option B[/bold magenta]"))
 
-    console.print(f"[bold]Annotated Pairs:[/bold] {len(human)}")
-    console.print(f"[bold]Observed Agreement:[/bold] {agreement:.1%}")
-    console.print(f"[bold]Cohen's Kappa:[/bold] {kappa:.3f}")
+            choice = typer.prompt(
+                "Which response is better?",
+                default="3",
+                show_default=True,
+            )
+            if choice.lower() in ["q", "quit", "exit"]:
+                break
 
-    border = "green" if tier == "reliable" else ("yellow" if tier == "moderate" else "red")
-    console.print(Panel(banner, title=f"Judge Reliability: {tier.upper()}", border_style=border))
+            h_verdict = map_human_choice_to_verdict(choice, pair.option_a_is_candidate)
+            asyncio.run(save_human_label(pair.generation_id, h_verdict))
+
+            paired_data.append({
+                "human": h_verdict,
+                "judge": pair.judge_verdict,
+                "generation_id": pair.generation_id,
+            })
+            console.print(f"  Recorded verdict: [green]{h_verdict}[/green] (Judge: [dim]{pair.judge_verdict}[/dim])\n")
+
+    elif labels_file and labels_file.exists():
+        with open(labels_file, encoding="utf-8") as f:
+            paired_data = json.load(f)
+    else:
+        # Check if default evidence file exists
+        default_evidence = Path("docs/evidence/2026-10-14-judge-calibration.json")
+        if default_evidence.exists():
+            with open(default_evidence, encoding="utf-8") as f:
+                paired_data = json.load(f).get("paired_labels", [])
+        else:
+            console.print("[bold red]Please provide a --file or run with --interactive.[/bold red]")
+            raise typer.Exit(code=1)
+
+    analysis = analyze_calibration(paired_data)
+
+    console.print(f"\n[bold]Annotated Pairs:[/bold] {analysis.total_pairs}")
+    console.print(f"[bold]Observed Agreement:[/bold] {analysis.agreement_rate:.1%}")
+    console.print(f"[bold]Cohen's Kappa:[/bold] {analysis.cohen_kappa:.3f}")
+
+    border = "green" if analysis.tier == "reliable" else ("yellow" if analysis.tier == "moderate" else "red")
+    console.print(Panel(analysis.banner_message, title=f"Judge Reliability: {analysis.tier.upper()}", border_style=border))
 
     # Confusion matrix
-    categories = sorted(cm.keys())
+    categories = sorted(analysis.confusion_matrix.keys())
     cm_table = Table(title="Confusion Matrix (Human vs Judge)")
     cm_table.add_column("Human \\ Judge", style="bold")
     for cat in categories:
         cm_table.add_column(cat, justify="center")
 
     for h_cat in categories:
-        row_vals = [str(cm[h_cat].get(j_cat, 0)) for j_cat in categories]
+        row_vals = [str(analysis.confusion_matrix[h_cat].get(j_cat, 0)) for j_cat in categories]
         cm_table.add_row(h_cat, *row_vals)
 
     console.print(cm_table)
+
+    save_path = out or Path("docs/evidence/2026-10-14-judge-calibration.json")
+    save_path.parent.mkdir(parents=True, exist_ok=True)
+    report_dict = {
+        **analysis.to_dict(),
+        "paired_labels": paired_data,
+    }
+    save_path.write_text(json.dumps(report_dict, indent=2), encoding="utf-8")
+    console.print(f"[dim]Saved calibration results to {save_path}[/dim]")
+
 
 
 @app.command("report")
