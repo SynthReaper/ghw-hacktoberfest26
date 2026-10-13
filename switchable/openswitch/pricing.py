@@ -1,9 +1,9 @@
 """Pricing loader and staleness auditor for model tokens."""
 
 from dataclasses import dataclass, field
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
-from typing import Any
+
 import yaml
 
 DEFAULT_PRICING_PATH = Path(__file__).resolve().parent.parent / "specs" / "pricing.yaml"
@@ -62,8 +62,8 @@ def is_price_stale(verified_on_str: str | None, max_age_days: int = 30) -> bool:
     if not verified_on_str or verified_on_str == "UNVERIFIED":
         return True
     try:
-        verified_date = datetime.strptime(verified_on_str, "%Y-%m-%d").replace(tzinfo=timezone.utc)
-        age_days = (datetime.now(timezone.utc) - verified_date).days
+        verified_date = datetime.strptime(verified_on_str, "%Y-%m-%d").replace(tzinfo=UTC)
+        age_days = (datetime.now(UTC) - verified_date).days
         return age_days > max_age_days
     except ValueError:
         return True

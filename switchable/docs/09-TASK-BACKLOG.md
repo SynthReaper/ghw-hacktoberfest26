@@ -17,7 +17,7 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 ## P1 — Core engine (Thu Oct 15)
 - [x] **T-009 [A] Runner.** Concurrency per provider, retry/backoff, resume, cost estimate and caps, cancellation. *AC:* integration test resumes after simulated crash without re-running completed rows; cap blocks a run. (3h)
 - [x] **T-010 [A] Deterministic metrics.** JSON validity, schema validity, per-field accuracy, label accuracy, macro-F1. *AC:* table-driven unit tests incl. fenced JSON, extra keys, case rules. (2h)
-- [ ] **T-011 [A] Judge.** Prompt from `specs/judge_prompt.md`, swapped-order pairs, strict JSON parsing with one retry, aggregation rules. *AC:* tests for agree/disagree/invalid; injection string in input does not change verdict logic in tests. (3h)
+- [x] **T-011 [A] Judge.** Prompt from `specs/judge_prompt.md`, swapped-order pairs, strict JSON parsing with one retry, aggregation rules. *AC:* tests for agree/disagree/invalid; injection string in input does not change verdict logic in tests. (3h)
 - [ ] **T-012 [A] Stats.** Bootstrap CI (seeded), parity/win rate, percentiles, Spearman for length bias. *AC:* test against known distributions; deterministic with seed. (2h)
 - [ ] **T-013 [A] Cost model.** Per-request cost, projections, break-even per doc 05 §6. *AC:* worked examples as tests; assumptions object returned. (1.5h)
 - [ ] **T-014 [A] Recommendation.** Per doc 05 §7. *AC:* tests for eligible, none eligible, fine-tune path, n too small. (1.5h)

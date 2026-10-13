@@ -1,8 +1,6 @@
 import pytest
 
 from openswitch.pricing import (
-    BaselinePricing,
-    ModelPrice,
     is_price_stale,
     load_pricing,
 )
