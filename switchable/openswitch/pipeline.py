@@ -75,44 +75,17 @@ class PipelineOrchestrator:
         exp_name = experiment_name or f"exp-{datetime.now(UTC).strftime('%Y%m%d-%H%M%S')}"
         git_commit = get_git_commit()
 
-        # Register fake providers if fake_mode is active
+        # Register simulated providers if fake_mode is active
         if self.fake_mode:
+            from openswitch.providers.fake import RealisticTaskProvider
+
             for k in model_keys:
-                if k not in registry:
-                    # Provide scripted valid response based on task type
-                    if task_config.get("type") == "classification":
-                        default_resp = task_config.get("labels", ["billing"])[0]
-                    elif task_config.get("type") == "extraction":
-                        default_resp = json.dumps(
-                            {
-                                "category": "billing",
-                                "urgency": "medium",
-                                "summary": "Sample extracted issue summary.",
-                            }
-                        )
-                    else:
-                        default_resp = "Valid synthetic answer text."
+                registry.register(k, RealisticTaskProvider(model_key=k, task_config=task_config))
 
-                    registry.register(
-                        k,
-                        FakeProvider(
-                            default_response=default_resp,
-                            tokens_in=120,
-                            tokens_out=25,
-                            latency_ms=65.0,
-                            ttft_ms=20.0,
-                        ),
-                    )
-
-            if judge_model_key and judge_model_key not in registry:
+            if judge_model_key:
                 registry.register(
                     judge_model_key,
-                    FakeProvider(
-                        default_response='{"verdict": "A", "reason": "Consistent adherence to rubric"}',
-                        tokens_in=180,
-                        tokens_out=20,
-                        latency_ms=80.0,
-                    ),
+                    RealisticTaskProvider(model_key=judge_model_key, task_config={"type": "judge"}),
                 )
 
         # 1. Create Experiment record
@@ -245,20 +218,24 @@ class PipelineOrchestrator:
                         )
 
                     # 3. Field accuracy for JSON dictionaries
-                    if schema and isinstance(schema, dict) and "properties" in schema:
-                        _, cand_dict = is_valid_json(gen.output)
-                        _, ref_dict = is_valid_json(ex.reference)
-                        if isinstance(cand_dict, dict) and isinstance(ref_dict, dict):
-                            fields = list(schema.get("properties", {}).keys())
-                            f_res = evaluate_field_accuracy(cand_dict, ref_dict, fields)
-                            for f, acc in f_res.field_accuracy.items():
+                    if schema:
+                        crit_fields = task_config.get("critical_fields", [])
+                        try:
+                            field_scores = evaluate_field_accuracy(
+                                candidate_text=gen.output,
+                                reference_text=ex.reference,
+                                critical_fields=crit_fields,
+                            )
+                            for metric_name, val in field_scores.items():
                                 session.add(
                                     Score(
                                         generation_id=gen.id,
-                                        metric=f"field_accuracy_{f}",
-                                        value=acc,
+                                        metric=metric_name,
+                                        value=val,
                                     )
                                 )
+                        except Exception as e:
+                            logger.warning(f"Field accuracy evaluation error on gen {gen.id}: {e}")
 
             await session.commit()
 
@@ -450,9 +427,10 @@ class PipelineOrchestrator:
                 )
                 length_bias = check_length_bias(output_lengths, primary_scores)
 
-                # Primary metric selection for candidate summary
                 if primary_metric in metrics_cis:
                     prim_ci = metrics_cis[primary_metric]
+                elif primary_metric == "composite" and "composite_critical_fields_correct" in metrics_cis:
+                    prim_ci = metrics_cis["composite_critical_fields_correct"]
                 elif (
                     "parity_rate" in judge_stats_dict
                     and judge_stats_dict["parity_rate"]["n_samples"] > 0

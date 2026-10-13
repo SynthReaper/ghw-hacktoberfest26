@@ -1,0 +1,891 @@
+{
+  "experiment_id": "9968536c-a91b-4f62-8b1e-eb16fb425bb6",
+  "created_at": "2026-10-13T23:27:12.540274+00:00",
+  "git_commit": "db67a132",
+  "dataset_id": "7be91429-4a95-449e-b779-76dced9b0843",
+  "test_size": 51,
+  "trainable_rows_count": 81,
+  "total_actual_cost_usd": 0.001309,
+  "max_inconsistency_rate": 0.0,
+  "max_error_rate": 0.0,
+  "max_empty_rate": 0.0,
+  "recommendation": {
+    "decision": "switch_after_finetune",
+    "recommended_candidate": {
+      "model_key": "gemma-2b-local",
+      "display_name": "gemma-2b-local",
+      "primary_metric_name": "label_accuracy",
+      "point_estimate": 0.411765,
+      "ci_lower": 0.27451,
+      "ci_upper": 0.54902,
+      "cost_per_1k": 0.0,
+      "error_rate": 0.0,
+      "latency_p50_ms": 30.0,
+      "is_local": true,
+      "is_finetuned": false
+    },
+    "headline": "Switch after fine-tune recommended (starting with gemma-2b-local)",
+    "details": "No zero-shot candidate met the 85% threshold with 95% confidence. Closest candidate is gemma-2b-local at [27.45%, 54.90%] (gap: 57.5%). Fine-tuning is feasible with 81 training rows.",
+    "threshold": 0.85,
+    "eligible_candidates": [],
+    "ineligible_candidates": [
+      {
+        "model_key": "gemma-9b-local",
+        "display_name": "gemma-9b-local",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.392157,
+        "ci_lower": 0.254902,
+        "ci_upper": 0.529412,
+        "cost_per_1k": 0.0,
+        "error_rate": 0.0,
+        "latency_p50_ms": 65.0,
+        "is_local": true,
+        "is_finetuned": false
+      },
+      {
+        "model_key": "llama-3b-local",
+        "display_name": "llama-3b-local",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.333333,
+        "ci_lower": 0.215686,
+        "ci_upper": 0.470588,
+        "cost_per_1k": 0.0,
+        "error_rate": 0.0,
+        "latency_p50_ms": 40.0,
+        "is_local": true,
+        "is_finetuned": false
+      },
+      {
+        "model_key": "gemma-2b-local",
+        "display_name": "gemma-2b-local",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.411765,
+        "ci_lower": 0.27451,
+        "ci_upper": 0.54902,
+        "cost_per_1k": 0.0,
+        "error_rate": 0.0,
+        "latency_p50_ms": 30.0,
+        "is_local": true,
+        "is_finetuned": false
+      },
+      {
+        "model_key": "do-llama-8b",
+        "display_name": "do-llama-8b",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "cost_per_1k": 0.003486,
+        "error_rate": 0.0,
+        "latency_p50_ms": 85.0,
+        "is_local": false,
+        "is_finetuned": false
+      },
+      {
+        "model_key": "bb-qwen-7b",
+        "display_name": "bb-qwen-7b",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "cost_per_1k": 0.003486,
+        "error_rate": 0.0,
+        "latency_p50_ms": 95.0,
+        "is_local": false,
+        "is_finetuned": false
+      },
+      {
+        "model_key": "do-mistral-7b",
+        "display_name": "do-mistral-7b",
+        "primary_metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "cost_per_1k": 0.003486,
+        "error_rate": 0.0,
+        "latency_p50_ms": 80.0,
+        "is_local": false,
+        "is_finetuned": false
+      }
+    ],
+    "runner_ups": [],
+    "savings_range_usd_per_1k": null,
+    "closest_candidate": {
+      "model_key": "gemma-2b-local",
+      "display_name": "gemma-2b-local",
+      "primary_metric_name": "label_accuracy",
+      "point_estimate": 0.411765,
+      "ci_lower": 0.27451,
+      "ci_upper": 0.54902,
+      "cost_per_1k": 0.0,
+      "error_rate": 0.0,
+      "latency_p50_ms": 30.0,
+      "is_local": true,
+      "is_finetuned": false
+    },
+    "closest_gap": 0.5755,
+    "finetune_feasible": true,
+    "trainable_rows_count": 81,
+    "test_size": 51,
+    "warnings": []
+  },
+  "models": {
+    "gemma-9b-local": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.392157,
+        "ci_lower": 0.254902,
+        "ci_upper": 0.529412,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.392157,
+          "ci_lower": 0.254902,
+          "ci_upper": 0.529412,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "gemma-9b-local",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 0.0,
+        "cost_per_1k": 0.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.0,
+        "monthly_savings": 750.0,
+        "savings_pct": 100.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 20.0,
+        "p95": 65.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.0139,
+        "p_value": 0.9231,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    },
+    "llama-3b-local": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.333333,
+        "ci_lower": 0.215686,
+        "ci_upper": 0.470588,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.333333,
+          "ci_lower": 0.215686,
+          "ci_upper": 0.470588,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "llama-3b-local",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 0.0,
+        "cost_per_1k": 0.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.0,
+        "monthly_savings": 750.0,
+        "savings_pct": 100.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 14.0,
+        "p95": 40.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.1712,
+        "p_value": 0.2298,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    },
+    "gemma-2b-local": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.411765,
+        "ci_lower": 0.27451,
+        "ci_upper": 0.54902,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.411765,
+          "ci_lower": 0.27451,
+          "ci_upper": 0.54902,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "gemma-2b-local",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 0.0,
+        "cost_per_1k": 0.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.0,
+        "monthly_savings": 750.0,
+        "savings_pct": 100.0,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 0.0,
+          "candidate_is_local": true,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 12.0,
+        "p95": 30.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.0371,
+        "p_value": 0.7961,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    },
+    "do-llama-8b": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.372549,
+          "ci_lower": 0.235294,
+          "ci_upper": 0.509804,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "do-llama-8b",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 3.49e-06,
+        "cost_per_1k": 0.003486,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.17,
+        "monthly_savings": 749.83,
+        "savings_pct": 99.98,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 28.0,
+        "p95": 85.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.0393,
+        "p_value": 0.7841,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    },
+    "bb-qwen-7b": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.372549,
+          "ci_lower": 0.235294,
+          "ci_upper": 0.509804,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "bb-qwen-7b",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 3.49e-06,
+        "cost_per_1k": 0.003486,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.17,
+        "monthly_savings": 749.83,
+        "savings_pct": 99.98,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 30.0,
+        "p95": 95.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.0437,
+        "p_value": 0.7607,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    },
+    "do-mistral-7b": {
+      "primary_metric": {
+        "metric_name": "label_accuracy",
+        "point_estimate": 0.372549,
+        "ci_lower": 0.235294,
+        "ci_upper": 0.509804,
+        "ci_level": 0.95,
+        "n_samples": 51,
+        "bootstrap_resamples": 10000,
+        "seed": 42
+      },
+      "deterministic_metrics": {
+        "label_accuracy": {
+          "metric_name": "label_accuracy",
+          "point_estimate": 0.372549,
+          "ci_lower": 0.235294,
+          "ci_upper": 0.509804,
+          "ci_level": 0.95,
+          "n_samples": 51,
+          "bootstrap_resamples": 10000,
+          "seed": 42
+        }
+      },
+      "judge_metrics": {
+        "parity_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "win_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "loss_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "inconsistent_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        },
+        "invalid_rate": {
+          "metric_name": "empty",
+          "point_estimate": 0.0,
+          "ci_lower": 0.0,
+          "ci_upper": 0.0,
+          "ci_level": 0.95,
+          "n_samples": 0,
+          "bootstrap_resamples": 10000,
+          "seed": null
+        }
+      },
+      "cost_summary": {
+        "model_key": "do-mistral-7b",
+        "mean_tokens_in": 13.43,
+        "mean_tokens_out": 4.0,
+        "cost_per_request": 3.49e-06,
+        "cost_per_1k": 0.003486,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "monthly_projection": {
+        "monthly_volume": 50000,
+        "baseline_monthly_cost": 750.0,
+        "candidate_monthly_cost": 0.17,
+        "monthly_savings": 749.83,
+        "savings_pct": 99.98,
+        "assumptions": {
+          "pricing_source": "pricing.yaml",
+          "verified_on": "2026-10-14",
+          "is_stale": false,
+          "baseline_method": "tokens_and_price",
+          "baseline_cost_per_request": 0.015,
+          "candidate_cost_per_request": 3.49e-06,
+          "candidate_is_local": false,
+          "training_cost_usd": 0.0,
+          "serving_cost_notes": null,
+          "hardware_amortization_monthly_usd": 0.0
+        }
+      },
+      "latency": {
+        "p50": 25.0,
+        "p95": 80.0
+      },
+      "length_bias": {
+        "spearman_rho": -0.0435,
+        "p_value": 0.7616,
+        "flagged": false,
+        "warning": null
+      },
+      "error_rate": 0.0,
+      "empty_output_rate": 0.0
+    }
+  },
+  "anomalies_detected": []
+}
