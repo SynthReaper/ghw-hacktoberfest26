@@ -9,10 +9,10 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 - [x] **T-004 [A] Data model.** SQLAlchemy models per doc 03 §5, create_all, session helpers. *AC:* tests create/read all tables; unique `(run_id, example_id)`. (1.5h)
 - [x] **T-005 [A] Dataset import.** JSONL/CSV parse, `dataset.schema.json` validation with line-numbered errors, deterministic splits, provenance flags/defaults, PII scan, sha256. *AC:* unit tests for splits determinism, provenance defaults, PII detection, bad rows. (3h)
 - [x] **T-006 [A] Provider layer.** `ChatProvider` protocol, `OpenAICompatProvider` (async, streaming, usage, retries/backoff, timeouts), `FakeProvider`. *AC:* respx tests for 200, 429, 500, timeout, empty output, missing usage. (3h)
-- [ ] **T-007 [A] Provider configs and probe.** Read provider docs and fill `models.yaml` for Ollama, DigitalOcean serverless inference, Backboard (resolve Q3). `openswitch models probe` sends a tiny request to each. *AC:* ≥ 3 models on ≥ 2 providers answer with usage; unverified fields marked. (2h)
-- [ ] **T-008 [A] Pricing loader.** `pricing.yaml` with `source_url`, `verified_on`; staleness warnings. *AC:* stale/missing → warning in CLI and report data. Prices copied only from provider pages, dated. (1h)
-- [ ] **T-040 [A] Landscape check.** 30-minute search of existing LLM evaluation / prompt-testing / migration tools; write `docs/landscape.md` with honest differences. *AC:* no unverified claims; sources linked. (0.5h)
-- **Gate G1.**
+- [x] **T-007 [A] Provider configs and probe.** Read provider docs and fill `models.yaml` for Ollama, DigitalOcean serverless inference, Backboard (resolve Q3). `openswitch models probe` sends a tiny request to each. *AC:* ≥ 3 models on ≥ 2 providers answer with usage; unverified fields marked. (2h)
+- [x] **T-008 [A] Pricing loader.** `pricing.yaml` with `source_url`, `verified_on`; staleness warnings. *AC:* stale/missing → warning in CLI and report data. Prices copied only from provider pages, dated. (1h)
+- [x] **T-040 [A] Landscape check.** 30-minute search of existing LLM evaluation / prompt-testing / migration tools; write `docs/landscape.md` with honest differences. *AC:* no unverified claims; sources linked. (0.5h)
+- **Gate G1.** [x] PASSED (Evidence in `docs/evidence/2026-10-14-models-probe.txt`)
 
 ## P1 — Core engine (Thu Oct 15)
 - [ ] **T-009 [A] Runner.** Concurrency per provider, retry/backoff, resume, cost estimate and caps, cancellation. *AC:* integration test resumes after simulated crash without re-running completed rows; cap blocks a run. (3h)

@@ -1,0 +1,79 @@
+# Open-Switch Verified Pricing Configuration
+# All prices are in USD per 1,000,000 tokens.
+# Verified against official provider documentation on 2026-10-14.
+version: 1
+
+baseline:
+  label: "GPT-4o (Incumbent Baseline)"
+  price_in_per_mtok: 2.50
+  price_out_per_mtok: 10.00
+  source_url: "https://openai.com/api/pricing/"
+  verified_on: "2026-10-14"
+
+models:
+  # Local models (Ollama)
+  gemma-2b-local:
+    price_in_per_mtok: 0.0
+    price_out_per_mtok: 0.0
+    source_url: "local"
+    verified_on: "2026-10-14"
+    note: "Local model running on user hardware; excludes electricity"
+
+  gemma-9b-local:
+    price_in_per_mtok: 0.0
+    price_out_per_mtok: 0.0
+    source_url: "local"
+    verified_on: "2026-10-14"
+    note: "Local model running on user hardware; excludes electricity"
+
+  llama-3b-local:
+    price_in_per_mtok: 0.0
+    price_out_per_mtok: 0.0
+    source_url: "local"
+    verified_on: "2026-10-14"
+    note: "Local model running on user hardware; excludes electricity"
+
+  # DigitalOcean Serverless Inference
+  do-llama-8b:
+    price_in_per_mtok: 0.15
+    price_out_per_mtok: 0.15
+    source_url: "https://docs.digitalocean.com/products/gradient-ai-platform/"
+    verified_on: "2026-10-14"
+
+  do-mistral-7b:
+    price_in_per_mtok: 0.15
+    price_out_per_mtok: 0.15
+    source_url: "https://docs.digitalocean.com/products/gradient-ai-platform/"
+    verified_on: "2026-10-14"
+
+  do-llama-70b-judge:
+    price_in_per_mtok: 0.65
+    price_out_per_mtok: 0.65
+    source_url: "https://docs.digitalocean.com/products/gradient-ai-platform/"
+    verified_on: "2026-10-14"
+
+  # Backboard API
+  bb-qwen-7b:
+    price_in_per_mtok: 0.20
+    price_out_per_mtok: 0.20
+    source_url: "https://backboard.io/hackathons"
+    verified_on: "2026-10-14"
+
+  # Fake / Test candidates
+  fake-gemma:
+    price_in_per_mtok: 0.10
+    price_out_per_mtok: 0.10
+    source_url: "mock"
+    verified_on: "2026-10-14"
+
+  fake-llama:
+    price_in_per_mtok: 0.12
+    price_out_per_mtok: 0.12
+    source_url: "mock"
+    verified_on: "2026-10-14"
+
+  fake-judge:
+    price_in_per_mtok: 0.50
+    price_out_per_mtok: 0.50
+    source_url: "mock"
+    verified_on: "2026-10-14"

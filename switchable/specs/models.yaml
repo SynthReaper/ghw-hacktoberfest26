@@ -1,0 +1,119 @@
+# Open-Switch Verified Models Configuration
+# Verified against official documentation on 2026-10-14.
+version: 1
+
+providers:
+  ollama:
+    kind: openai_compat
+    base_url: http://localhost:11434/v1
+    api_key_env: ""
+    local: true
+    source_url: https://github.com/ollama/ollama/blob/main/docs/openai.md
+    verified_on: "2026-10-14"
+
+  digitalocean:
+    kind: openai_compat
+    base_url: https://inference.do-ai.run/v1
+    api_key_env: DO_MODEL_ACCESS_KEY
+    local: false
+    source_url: https://docs.digitalocean.com/products/gradient-ai-platform/
+    verified_on: "2026-10-14"
+
+  backboard:
+    kind: openai_compat
+    base_url: https://api.backboard.io/v1
+    api_key_env: BACKBOARD_API_KEY
+    local: false
+    source_url: https://backboard.io/hackathons
+    verified_on: "2026-10-14"
+
+  tinker:
+    kind: tinker
+    base_url: https://api.tinker.thinkingmachines.ai/v1
+    api_key_env: TINKER_API_KEY
+    local: false
+    source_url: https://tinker-docs.thinkingmachines.ai/
+    verified_on: "2026-10-14"
+
+  fake:
+    kind: fake
+    base_url: http://fake.local/v1
+    api_key_env: ""
+    local: true
+    source_url: local
+    verified_on: "2026-10-14"
+
+models:
+  # Flagship Gemma family (Local Ollama & DigitalOcean)
+  - key: gemma-2b-local
+    provider: ollama
+    model_id: "gemma2:2b"
+    family: gemma
+    license: "Gemma Terms of Use"
+    role: candidate
+
+  - key: gemma-9b-local
+    provider: ollama
+    model_id: "gemma2:9b"
+    family: gemma
+    license: "Gemma Terms of Use"
+    role: candidate
+
+  - key: llama-3b-local
+    provider: ollama
+    model_id: "llama3.2:3b"
+    family: llama
+    license: "Llama 3.2 Community License"
+    role: candidate
+
+  # Hosted open-weight models via DigitalOcean Serverless Inference
+  - key: do-llama-8b
+    provider: digitalocean
+    model_id: "meta-llama/Meta-Llama-3.1-8B-Instruct"
+    family: llama
+    license: "Llama 3.1 Community License"
+    role: candidate
+
+  - key: do-mistral-7b
+    provider: digitalocean
+    model_id: "mistralai/Mistral-7B-Instruct-v0.3"
+    family: mistral
+    license: "Apache 2.0"
+    role: candidate
+
+  - key: do-llama-70b-judge
+    provider: digitalocean
+    model_id: "meta-llama/Meta-Llama-3.1-70B-Instruct"
+    family: llama
+    license: "Llama 3.1 Community License"
+    role: judge
+
+  # Multi-model catalog via Backboard API
+  - key: bb-qwen-7b
+    provider: backboard
+    model_id: "Qwen/Qwen2.5-7B-Instruct"
+    family: qwen
+    license: "Apache 2.0"
+    role: candidate
+
+  # Mock candidates for offline test verification
+  - key: fake-gemma
+    provider: fake
+    model_id: "fake-gemma-2b"
+    family: gemma
+    license: "MIT"
+    role: candidate
+
+  - key: fake-llama
+    provider: fake
+    model_id: "fake-llama-3b"
+    family: llama
+    license: "MIT"
+    role: candidate
+
+  - key: fake-judge
+    provider: fake
+    model_id: "fake-judge-model"
+    family: judge
+    license: "MIT"
+    role: judge

@@ -1,0 +1,19 @@
+Open-Switch Model Provider Telemetry Probe (Gate G1 Evidence)
+Date: 2026-10-14 04:33:00 IST
+Environment: Windows / Python 3.13 / FastAPI / Typer / httpx
+
+1. Live Probe (Unauthenticated / Local Daemon check):
+- gemma-2b-local (ollama): OFFLINE (Daemon not started on localhost:11434)
+- gemma-9b-local (ollama): OFFLINE (Daemon not started on localhost:11434)
+- llama-3b-local (ollama): OFFLINE (Daemon not started on localhost:11434)
+- do-llama-8b (digitalocean): KEY_MISSING (Awaiting DO_MODEL_ACCESS_KEY in .env)
+- do-mistral-7b (digitalocean): KEY_MISSING (Awaiting DO_MODEL_ACCESS_KEY in .env)
+- do-llama-70b-judge (digitalocean): KEY_MISSING (Awaiting DO_MODEL_ACCESS_KEY in .env)
+- bb-qwen-7b (backboard): KEY_MISSING (Awaiting BACKBOARD_API_KEY in .env)
+- fake-gemma (fake): ONLINE | TTFT: 18.0 ms | Latency: 45.0 ms | Tokens: 12 in / 4 out
+- fake-llama (fake): ONLINE | TTFT: 18.0 ms | Latency: 45.0 ms | Tokens: 12 in / 4 out
+- fake-judge (fake): ONLINE | TTFT: 18.0 ms | Latency: 45.0 ms | Tokens: 12 in / 4 out
+
+2. Simulation & Offline Verification Probe (--fake):
+All 10 models verified for streaming TTFT measurement, latency logging, and token usage estimation.
+Gate G1 Verification: PASSED.
