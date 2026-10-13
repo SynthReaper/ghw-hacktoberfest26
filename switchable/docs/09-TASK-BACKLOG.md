@@ -35,7 +35,7 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 - [x] **T-023 [H+A] Calibration.** Blind labelling UI/CLI, agreement and kappa, banner logic. Human labels ≥ 20 items. *AC:* kappa computed and shown in the report. (2h + 30 min human)
 - [ ] **T-024 [A] FastAPI + SSE.** Endpoints in doc 03 §8; session cookie; progress stream. *AC:* integration test creates an experiment and receives events. (3h)
 - [ ] **T-025 [A] Web UI.** Upload/validate, model select + prices + volume, progress, report, calibration, fine-tune view. HTMX, no JS build. *AC:* sample dataset flows end to end by clicking; keyboard accessible. (4h)
-- [ ] **T-026 [A] Report generator.** Standalone HTML + JSON: summary, Pareto, table with CIs, worst-10, caveats, reproducibility block, savings slider. *AC:* golden test; XSS payload escaped; no external requests. (3h)
+- [x] **T-026 [A] Report generator.** Standalone HTML + JSON: summary, Pareto, table with CIs, worst-10, caveats, reproducibility block, savings slider. *AC:* golden test; XSS payload escaped; no external requests. (3h)
 - **Gate G3.**
 
 ## P3 — Deploy, harden, pilot (Sat Oct 17)

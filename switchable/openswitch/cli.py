@@ -417,20 +417,11 @@ def report_cmd(
     )
 
     if html_output:
-        # Generate standalone HTML
-        html_content = f"""<!DOCTYPE html>
-<html>
-<head><title>Open-Switch Report: {res.get("experiment_id")}</title></head>
-<body style="font-family:sans-serif;max-width:800px;margin:2rem auto;padding:1rem;">
-<h1>Open-Switch Evaluation Report</h1>
-<p><strong>Commit:</strong> {res.get("git_commit")} | <strong>Date:</strong> {res.get("created_at")}</p>
-<h2>{rec.get("headline")}</h2>
-<p>{rec.get("details")}</p>
-</body>
-</html>"""
+        from openswitch.report import generate_standalone_html
+
+        html_content = generate_standalone_html(res)
         html_output.parent.mkdir(parents=True, exist_ok=True)
-        with open(html_output, "w", encoding="utf-8") as f:
-            f.write(html_content)
+        html_output.write_text(html_content, encoding="utf-8")
         console.print(f"[green][OK] Standalone HTML report saved to:[/green] {html_output}")
 
         if open_browser:

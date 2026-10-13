@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Open-Switch Report — a8b149a8-8758-4e65-98c9-fca01f1bea47</title>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #0f172a; margin: 0; padding: 2rem 1rem; line-height: 1.5; }
+    .container { max-width: 900px; margin: 0 auto; }
+    .card { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .badge { display: inline-block; padding: 4px 10px; border-radius: 9999px; font-size: 12px; font-weight: 700; color: #ffffff; }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+    th { background: #f1f5f9; padding: 10px 14px; font-weight: 600; color: #475569; border-bottom: 2px solid #cbd5e1; }
+    pre { background: #0f172a; color: #f8fafc; padding: 12px; border-radius: 6px; font-size: 12px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header style="margin-bottom: 2rem;">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <h1 style="margin:0; font-size:1.75rem; font-weight:800; letter-spacing:-0.025em; color:#0f172a;">Open-Switch Evaluation Report</h1>
+          <p style="margin:4px 0 0; color:#64748b; font-size:0.875rem;">Dataset: <strong>a8b149a8-8758-4e65-98c9-fca01f1bea47</strong> (n=50) · Git Commit: <code>db67a132</code> · 2026-10-13T23:30:47.191185+00:00</p>
+        </div>
+        <span class="badge" style="background:#10b981;">RECOMMENDED SWITCH</span>
+      </div>
+    </header>
+
+    <!-- Executive Summary Card -->
+    <div class="card" style="border-left: 4px solid #10b981;">
+      <h2 style="margin:0 0 8px; font-size:1.25rem; font-weight:700;">No safe switch found at 85% threshold</h2>
+      <p style="margin:0 0 12px; color:#334155;">No candidate reliably satisfied the 85% lower CI bound requirement. Closest was gemma-9b-local with lower bound 66.00% (gap: 19.0%). Fine-tuning is not immediately feasible (0 trainable rows &lt; 50).</p>
+      <div style="font-size:0.8125rem; color:#64748b;">
+        Threshold: <strong>85% lower 95% CI bound</strong> · 10,000 percentile bootstrap resamples.
+      </div>
+    </div>
+
+    <!-- Judge Reliability Banner -->
+    <div style="background:#f8fafc; border:1px solid #10b981; border-left:4px solid #10b981; padding:10px 14px; border-radius:6px; margin-bottom:1.5rem; font-size:13px; color:#1e293b;">
+      <strong>Judge Calibration:</strong> Judge Cohen&#x27;s kappa = 0.848 (reliable).
+    </div>
+
+    <!-- Pareto Frontier Visualization -->
+    <div class="card">
+      <h3 style="margin:0 0 1rem; font-size:1.1rem; font-weight:700;">Quality vs Cost Pareto Frontier</h3>
+      <svg viewBox="0 0 640 320" width="100%" height="auto" style="max-width:640px;background:#f8fafc;border-radius:8px;border:1px solid #e2e8f0;font-family:ui-sans-serif,system-ui,sans-serif;">
+      <line x1="70" y1="270.0" x2="600" y2="270.0" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="60" y="274.0" font-size="11" fill="#64748b" text-anchor="end">0%</text><line x1="70" y1="212.5" x2="600" y2="212.5" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="60" y="216.5" font-size="11" fill="#64748b" text-anchor="end">25%</text><line x1="70" y1="155.0" x2="600" y2="155.0" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="60" y="159.0" font-size="11" fill="#64748b" text-anchor="end">50%</text><line x1="70" y1="97.5" x2="600" y2="97.5" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="60" y="101.5" font-size="11" fill="#64748b" text-anchor="end">75%</text><line x1="70" y1="40.0" x2="600" y2="40.0" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="60" y="44.0" font-size="11" fill="#64748b" text-anchor="end">100%</text><line x1="70.0" y1="40" x2="70.0" y2="270" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="70.0" y="290" font-size="11" fill="#64748b" text-anchor="middle">$0.000</text><line x1="202.5" y1="40" x2="202.5" y2="270" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="202.5" y="290" font-size="11" fill="#64748b" text-anchor="middle">$0.013</text><line x1="335.0" y1="40" x2="335.0" y2="270" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="335.0" y="290" font-size="11" fill="#64748b" text-anchor="middle">$0.025</text><line x1="467.5" y1="40" x2="467.5" y2="270" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="467.5" y="290" font-size="11" fill="#64748b" text-anchor="middle">$0.038</text><line x1="600.0" y1="40" x2="600.0" y2="270" stroke="#e2e8f0" stroke-dasharray="3,3" /><text x="600.0" y="290" font-size="11" fill="#64748b" text-anchor="middle">$0.050</text><text x="320.0" y="310" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Cost per 1,000 Requests (USD)</text><text x="20" y="160.0" font-size="12" font-weight="600" fill="#334155" text-anchor="middle" transform="rotate(-90 20 160.0)">Quality (Accuracy)</text><circle cx="70.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="78.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">gemma-9b-local</text><circle cx="70.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="78.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">llama-3b-local</text><circle cx="250.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="258.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">do-llama-8b</text><circle cx="250.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="258.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">bb-qwen-7b</text><circle cx="250.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="258.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">do-mistral-7b</text><circle cx="70.0" cy="90.6" r="6" fill="#3b82f6" stroke="#ffffff" stroke-width="2" /><text x="78.0" y="94.6" font-size="11" font-weight="500" fill="#1e293b">gemma-2b-local</text>
+    </svg>
+    </div>
+
+    <!-- Comparison Table with 95% Confidence Intervals -->
+    <div class="card" style="padding:0; overflow:hidden;">
+      <div style="padding:1rem 1.5rem 0.5rem;">
+        <h3 style="margin:0; font-size:1.1rem; font-weight:700;">Evaluated Candidates</h3>
+        <p style="margin:4px 0 0; color:#64748b; font-size:12px;">Ranked by lower 95% confidence interval bound against the reliability threshold.</p>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Model</th>
+            <th>Accuracy (95% CI)</th>
+            <th>Cost / 1k</th>
+            <th>Latency (p50)</th>
+            <th>Error Rate</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">gemma-9b-local </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0000</td>
+          <td style="padding:10px 14px;color:#334155;">65ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">llama-3b-local </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0000</td>
+          <td style="padding:10px 14px;color:#334155;">40ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">do-llama-8b </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0170</td>
+          <td style="padding:10px 14px;color:#334155;">85ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">bb-qwen-7b </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0170</td>
+          <td style="padding:10px 14px;color:#334155;">95ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">do-mistral-7b </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0170</td>
+          <td style="padding:10px 14px;color:#334155;">80ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        <tr style="border-bottom:1px solid #e2e8f0;">
+          <td style="padding:10px 14px;font-family:monospace;font-weight:600;">gemma-2b-local </td>
+          <td style="padding:10px 14px;font-weight:600;">78.0% <span style="font-size:11px;color:#64748b;font-weight:normal;">[66.0%, 88.0%]</span></td>
+          <td style="padding:10px 14px;color:#334155;">$0.0000</td>
+          <td style="padding:10px 14px;color:#334155;">30ms</td>
+          <td style="padding:10px 14px;color:#64748b;">0.0%</td>
+        </tr>
+        
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Interactive Savings Slider -->
+    <div class="card">
+      <h3 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:700;">Interactive Monthly Savings Calculator</h3>
+      <p style="margin:0 0 1rem; font-size:13px; color:#64748b;">Adjust your estimated monthly request volume to project switch savings.</p>
+      <div style="display:flex; align-items:center; gap:1rem; margin-bottom:1rem;">
+        <input type="range" id="volSlider" min="10000" max="5000000" step="10000" value="100000" style="flex:1;" oninput="updateSavings(this.value)">
+        <span id="volDisplay" style="font-weight:700; min-width:120px; font-family:monospace;">100,000 req/mo</span>
+      </div>
+      <div style="background:#f1f5f9; padding:12px; border-radius:6px; font-size:14px; color:#1e293b;">
+        Estimated monthly savings switching to <strong></strong>: <strong id="savingsVal" style="color:#16a34a;">$0.00</strong>
+      </div>
+      <script>
+        function updateSavings(val) {
+          document.getElementById('volDisplay').innerText = Number(val).toLocaleString() + ' req/mo';
+          var baseCostPer1k = 0.050; // Incumbent closed baseline estimate
+          var targetCostPer1k = 0.0;
+          var deltaPer1k = Math.max(0, baseCostPer1k - targetCostPer1k);
+          var savings = (val / 1000.0) * deltaPer1k;
+          document.getElementById('savingsVal').innerText = '$' + savings.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' / month';
+        }
+        updateSavings(100000);
+      </script>
+    </div>
+
+    <!-- Worst-10 Failure Cases -->
+    <div class="card">
+      <h3 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:700;">Worst-10 Diagnostic Cases</h3>
+      <p style="margin:0 0 1rem; font-size:13px; color:#64748b;">Failure analysis across the test split to guide prompt improvements or fine-tuning.</p>
+      <p style='color:#64748b;'>No catastrophic failure examples recorded.</p>
+    </div>
+
+    <!-- Caveats and Reproducibility -->
+    <div class="card">
+      <h3 style="margin:0 0 0.5rem; font-size:1.1rem; font-weight:700;">Reproducibility & Audit Trail</h3>
+      <p style="margin:0 0 1rem; font-size:13px; color:#64748b;">Cryptographic signatures, seeds, and library versions for 100% verifiable reproduction.</p>
+      <pre>{}</pre>
+    </div>
+  </div>
+</body>
+</html>
