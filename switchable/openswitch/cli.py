@@ -1,19 +1,20 @@
 """Command-line interface for Open-Switch."""
 
 import asyncio
+import sys
 from pathlib import Path
-from typing import Optional
+
 import typer
+import yaml
 from rich.console import Console
 from rich.table import Table
-import yaml
 
 from openswitch.config import settings
 from openswitch.datasets.importer import DatasetImporter
 from openswitch.db import session_context
 from openswitch.models import init_db
 from openswitch.pricing import load_pricing
-from openswitch.providers.base import ChatResult, ProviderError
+from openswitch.providers.base import ChatResult
 from openswitch.providers.fake import FakeProvider
 from openswitch.providers.openai_compat import OpenAICompatProvider
 
@@ -25,12 +26,13 @@ app = typer.Typer(
 models_app = typer.Typer(help="Manage and probe model providers.")
 app.add_typer(models_app, name="models")
 
-import sys
 console = Console(force_terminal=True)
 if sys.platform == "win32":
     try:
-        sys.stdout.reconfigure(encoding="utf-8")
-        sys.stderr.reconfigure(encoding="utf-8")
+        if hasattr(sys.stdout, "reconfigure"):
+            getattr(sys.stdout, "reconfigure")(encoding="utf-8")
+        if hasattr(sys.stderr, "reconfigure"):
+            getattr(sys.stderr, "reconfigure")(encoding="utf-8")
     except Exception:
         pass
 
@@ -44,14 +46,16 @@ def init():
         await init_db()
 
     asyncio.run(_init())
-    console.print(f"[green][OK] Database initialized successfully at:[/green] {settings.database_url}")
+    console.print(
+        f"[green][OK] Database initialized successfully at:[/green] {settings.database_url}"
+    )
     console.print(f"[green][OK] Storage directory ready at:[/green] {settings.data_dir.resolve()}")
 
 
 @app.command("import")
 def import_cmd(
     dataset_path: Path = typer.Argument(..., help="Path to JSONL or CSV dataset file."),
-    name: Optional[str] = typer.Option(None, "--name", "-n", help="Dataset name."),
+    name: str | None = typer.Option(None, "--name", "-n", help="Dataset name."),
     seed: int = typer.Option(1337, "--seed", "-s", help="Random seed for splitting."),
     attestation: bool = typer.Option(
         False,
@@ -79,7 +83,9 @@ def import_cmd(
     )
 
     if imported.pii_warnings:
-        console.print(f"[yellow][WARN] Detected {len(imported.pii_warnings)} potential PII tokens:[/yellow]")
+        console.print(
+            f"[yellow][WARN] Detected {len(imported.pii_warnings)} potential PII tokens:[/yellow]"
+        )
         for w in imported.pii_warnings[:5]:
             console.print(f"   - Row {w.row_idx} ({w.example_id}): [{w.pii_type}] {w.preview}")
         if len(imported.pii_warnings) > 5:
@@ -139,7 +145,6 @@ def probe_models(
             key = m["key"]
             provider_name = m["provider"]
             model_id = m["model_id"]
-            role = m.get("role", "candidate")
 
             # Check if fake mode requested or fake provider
             if fake or provider_name == "fake":
@@ -154,15 +159,34 @@ def probe_models(
                 p_cfg = providers_cfg.get(provider_name, {})
                 base_url = p_cfg.get("base_url")
                 if not base_url or base_url == "UNVERIFIED":
-                    table.add_row(key, provider_name, model_id, "[yellow]UNVERIFIED[/yellow]", "-", "-", "-", "Base URL missing")
+                    table.add_row(
+                        key,
+                        provider_name,
+                        model_id,
+                        "[yellow]UNVERIFIED[/yellow]",
+                        "-",
+                        "-",
+                        "-",
+                        "Base URL missing",
+                    )
                     continue
 
                 import os
+
                 api_key_env = p_cfg.get("api_key_env", "")
                 api_key = os.getenv(api_key_env, "") if api_key_env else ""
 
                 if api_key_env and not api_key:
-                    table.add_row(key, provider_name, model_id, "[yellow]KEY_MISSING[/yellow]", "-", "-", "-", f"Set {api_key_env} in .env")
+                    table.add_row(
+                        key,
+                        provider_name,
+                        model_id,
+                        "[yellow]KEY_MISSING[/yellow]",
+                        "-",
+                        "-",
+                        "-",
+                        f"Set {api_key_env} in .env",
+                    )
                     continue
 
                 try:
@@ -174,7 +198,9 @@ def probe_models(
                         max_retries=1,
                     )
                 except Exception as e:
-                    table.add_row(key, provider_name, model_id, "[red]CONFIG_ERR[/red]", "-", "-", "-", str(e))
+                    table.add_row(
+                        key, provider_name, model_id, "[red]CONFIG_ERR[/red]", "-", "-", "-", str(e)
+                    )
                     continue
 
             # Send tiny probe message
@@ -199,7 +225,9 @@ def probe_models(
                     res.text.strip()[:20],
                 )
             except Exception as e:
-                table.add_row(key, provider_name, model_id, "[red]OFFLINE[/red]", "-", "-", "-", str(e)[:30])
+                table.add_row(
+                    key, provider_name, model_id, "[red]OFFLINE[/red]", "-", "-", "-", str(e)[:30]
+                )
 
     asyncio.run(_probe())
     console.print(table)
@@ -250,5 +278,6 @@ def serve(
 ):
     """Start Open-Switch web server."""
     import uvicorn
+
     console.print(f"[bold green]Starting Open-Switch server on {host}:{port}...[/bold green]")
     uvicorn.run("openswitch.web.app:app", host=host, port=port, reload=False)
