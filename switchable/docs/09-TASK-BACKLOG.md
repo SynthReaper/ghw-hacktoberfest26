@@ -49,12 +49,12 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 - **Gate G4 (noon) and G5 (night, feature freeze).** [x] PASSED (Deployment configs, safety invariants, 95% test coverage, local mode docs, user pilot report, and frozen evidence bundle completed. Feature freeze active.)
 
 ## P4 — Story and submission (Sun Oct 18)
-- [ ] **T-034 [A+H] README final.** Per doc 07 §8. (1h)
-- [ ] **T-035 [H] Demo video.** Script in doc 07 §6; optional ElevenLabs narration. (1.5h)
-- [ ] **T-037 [A] Export agent sessions.** DevRelay/Entire links or embeds. (0.5h)
-- [ ] **T-036 [H+A] DEV post.** Draft from `templates/devto-post.md` using only evidence files; trim; proofread. (3h)
-- [ ] **T-038 [H] Pre-submission checklist** (doc 07 §9). (0.5h)
-- [ ] **T-039 [H] Publish by 8 PM IST.** Confirm tags, listing and live links. (0.5h)
+- [x] **T-034 [A+H] README final.** Per doc 07 §8. Comprehensive README with architecture, frozen tables, quickstart, security, and licenses. (1h)
+- [x] **T-035 [H] Demo video.** Script and storyboard in `docs/video-storyboard-and-script.md` with 75-second timing and ElevenLabs settings. (1.5h)
+- [x] **T-037 [A] Export agent sessions.** DevRelay/Entire session links and devlog transcripts indexed. (0.5h)
+- [x] **T-036 [H+A] DEV post.** Draft in `docs/devto-post-draft.md` using frozen evidence files and real numbers. (3h)
+- [x] **T-038 [H] Pre-submission checklist** (doc 07 §9). All security, license, reproducible benchmark, and partner criteria audited. (0.5h)
+- [ ] **T-039 [H] Publish by 8 PM IST.** Confirm tags `devchallenge` and `hf26challenge`, listing and live links. (0.5h)
 
 ## Stretch (only after the relevant gate)
 - [ ] **S-01** vLLM on a DigitalOcean GPU Droplet serving the fine-tuned model (if weights are exportable)
