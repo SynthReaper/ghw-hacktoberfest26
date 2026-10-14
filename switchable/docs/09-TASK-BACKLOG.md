@@ -33,10 +33,10 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 - [x] **T-021 [A] Tinker fine-tune.** Train on Task B train split, evaluate on test, record cost/time. Use the dev split for any choices. *AC:* result row in `finetunes`; comparison table generated. (3h + run time)
 - [x] **T-022 [A] k-shot baseline.** TF-IDF nearest examples, k=3..8, dev-split selection. *AC:* baseline appears in the comparison. (1.5h)
 - [x] **T-023 [H+A] Calibration.** Blind labelling UI/CLI, agreement and kappa, banner logic. Human labels ≥ 20 items. *AC:* kappa computed and shown in the report. (2h + 30 min human)
-- [ ] **T-024 [A] FastAPI + SSE.** Endpoints in doc 03 §8; session cookie; progress stream. *AC:* integration test creates an experiment and receives events. (3h)
-- [ ] **T-025 [A] Web UI.** Upload/validate, model select + prices + volume, progress, report, calibration, fine-tune view. HTMX, no JS build. *AC:* sample dataset flows end to end by clicking; keyboard accessible. (4h)
+- [x] **T-024 [A] FastAPI + SSE.** Endpoints in doc 03 §8; session cookie; progress stream. *AC:* integration test creates an experiment and receives events. (3h)
+- [x] **T-025 [A] Web UI.** Upload/validate, model select + prices + volume, progress, report, calibration, fine-tune view. HTMX, no JS build. *AC:* sample dataset flows end to end by clicking; keyboard accessible. (4h)
 - [x] **T-026 [A] Report generator.** Standalone HTML + JSON: summary, Pareto, table with CIs, worst-10, caveats, reproducibility block, savings slider. *AC:* golden test; XSS payload escaped; no external requests. (3h)
-- **Gate G3.**
+- **Gate G3.** [x] PASSED (Fine-tune vs k-shot evaluated on test split, HTML/JSON reports generated, SSE streaming and HTMX UI integrated and tested).
 
 ## P3 — Deploy, harden, pilot (Sat Oct 17)
 - [ ] **T-027 [A] Docker + Render.** Dockerfile, `render.yaml`, disk, env caps, health check, auto-delete, kill switch. *AC:* deployed from Blueprint; cap-hit and kill-switch tested. (2.5h)

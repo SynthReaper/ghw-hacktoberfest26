@@ -124,7 +124,8 @@ def test_cli_judge_and_calibrate(tmp_path: Path):
     with open(labels_file, "w", encoding="utf-8") as f:
         json.dump(labels_data, f)
 
-    calib_res = runner.invoke(app, ["calibrate", "--file", str(labels_file)])
+    out_calib = tmp_path / "calib_out.json"
+    calib_res = runner.invoke(app, ["calibrate", "--file", str(labels_file), "--out", str(out_calib)])
     assert calib_res.exit_code == 0
     assert "Cohen's Kappa" in calib_res.output
     assert "Confusion Matrix" in calib_res.output

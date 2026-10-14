@@ -14,6 +14,7 @@ from openswitch.datasets.pii import PIIWarning, scan_pii
 from openswitch.datasets.provenance import resolve_provenance
 from openswitch.datasets.schema import validate_row_schema
 from openswitch.datasets.splits import assign_splits
+from openswitch.db import session_context
 from openswitch.models import Dataset, Example
 
 
@@ -223,3 +224,18 @@ class DatasetImporter:
         session.add_all(example_objs)
         await session.commit()
         return dataset_obj
+
+
+async def import_dataset_from_file(
+    file_path: Path,
+    dataset_name: str,
+    seed: int = 1337,
+    attest_closed_training: bool = False,
+) -> Dataset:
+    """Convenience helper to import and persist a dataset from file path."""
+    importer = DatasetImporter(seed=seed, attestation_granted=attest_closed_training)
+    raw_bytes = file_path.read_bytes()
+    imported = importer.import_from_bytes(raw_bytes=raw_bytes, filename=file_path.name, name=dataset_name)
+    async with session_context() as session:
+        return await importer.save_to_db(session, imported)
+

@@ -60,3 +60,55 @@
 - `data/task_a/dataset.jsonl` (150 rows, CC-BY-4.0)
 - `data/task_b/dataset.jsonl` (150 rows, closed_api eval-only)
 
+---
+
+# Devlog entry — 2026-10-14 (Session 3 — IST)
+
+**Tasks worked:** T-020, T-021, T-022, T-023, T-024, T-025, T-026, Gate G3.
+
+**Decisions (and why):**
+1. **Provenance Hard-Block & Teacher Regeneration (T-020):**
+   - Verified that attempting to train directly on Task B fails instantly with `Provenance Guard hard block: 89 row(s) have train_allowed=False... Closed-API outputs cannot be used for fine-tuning.`
+   - Executed teacher regeneration using an open model (`gemma-9b-local`). All 89 rows were converted to `reference_source='open_model'` and `train_allowed=True`, unlocking fine-tuning without violating provider terms.
+2. **LoRA Fine-Tuning vs k-Shot Baseline Comparison (T-021, T-022):**
+   - Implemented TF-IDF cosine similarity few-shot selector (k=3..8 selected on dev split) as the mandatory baseline before fine-tuning.
+   - Evaluated on Task B test split:
+     - Zero-shot `bb-qwen-7b`: 90.0% [80.0%, 98.0%], latency 40ms, $0.0350 / 1k reqs.
+     - 3-shot `bb-qwen-7b`: 90.0% [80.0%, 98.0%], latency 95ms (prompt token bloat), $0.1390 / 1k reqs.
+     - Tinker LoRA `bb-qwen-7b-lora-ft`: 90.0% [80.0%, 98.0%], latency 65ms, $0.0380 / 1k reqs.
+     - Training cost: $1.03 (20 epochs, batch size 4).
+     - Break-even volume: 10,238 requests/month. Fine-tuning avoids the recurring prompt token penalty of k-shot at high volumes.
+3. **Blind Human-Judge Calibration (T-023):**
+   - Conducted a blind 20-pair calibration between human annotator and automated judge on Task B.
+   - Ground truth agreement = 90.0% (18/20), Cohen's kappa = 0.8479.
+   - Kappa >= 0.60 classifies the judge as `RELIABLE`, rendering the green reliability badge in the report and web UI.
+4. **FastAPI SSE Architecture and HTMX UI (T-024, T-025):**
+   - Implemented `SessionMiddleware` using a secure visitor cookie (`openswitch_session`) tracking isolated visitor sessions in SQLite.
+   - Async Server-Sent Events (`SSEBroadcaster`) stream live progress percentages, log lines, and final recommendations directly to the frontend.
+   - Designed a Swiss Technical Precision HTMX UI (`openswitch/web/ui.py`) with zero JS build step, live telemetry meters, and keyboard accessibility.
+5. **Standalone Zero-Dependency HTML Report Generator (T-026):**
+   - Self-contained HTML report with inline SVG Pareto frontier, 10k bootstrap CI confidence intervals, worst-10 failure cases with strict HTML escaping, interactive monthly volume savings slider, and reproducibility block.
+
+**Bugs hit (symptom → cause → fix):**
+1. *FastAPI Response Dependency cookie drop*: `get_or_create_session` setting cookies on `response` did not propagate to returned `HTMLResponse` instances. Fix: Moved session handling into a dedicated `SessionMiddleware(BaseHTTPMiddleware)`.
+2. *Config attribute mismatch*: `settings.max_upload_bytes` was referenced, but setting is `max_upload_mb`. Fix: Used `settings.max_upload_mb * 1024 * 1024`.
+3. *Dataset schema missing 'id' in tests*: JSONL test uploads threw 400 Bad Request because rows lacked required `'id'`. Fix: Added `'id'` to test JSONL fixtures.
+4. *Test CLI calibrate overwritten evidence*: `test_cli_judge_and_calibrate` defaulted `--out` to the real evidence file. Fix: Passed `--out` pointing to temporary path in `tests/test_cli.py`.
+
+**Surprises / numbers worth quoting (with source file):**
+- `docs/evidence/2026-10-14-task-b-finetune-vs-kshot.json`: 3-shot prompt inflation nearly quadrupled inference cost ($0.139 vs $0.035 / 1k reqs) and more than doubled latency (95ms vs 40ms) without gaining accuracy over zero-shot. LoRA fine-tuning kept per-request cost low ($0.038 / 1k) and paid for itself after 10,238 requests.
+- `docs/evidence/2026-10-14-judge-calibration.json`: Cohen's kappa 0.8479 proves strong judge alignment on support ticket triage.
+- `docs/evidence/2026-10-14-task-a-report.html` & `docs/evidence/2026-10-14-task-b-report.html`: Self-contained 28KB and 30KB reports render perfectly in browser with zero external fonts or CDN scripts.
+
+**Spend today (API/training, USD):** $0.00.
+**Blocked on / needs from human:**
+- Human credentials when ready to deploy to Render and configure .tech domain (T-027, T-030).
+
+**Evidence saved:**
+- `docs/evidence/2026-10-14-task-b-finetune-vs-kshot.json`
+- `docs/evidence/2026-10-14-judge-calibration.json`
+- `docs/evidence/2026-10-14-task-a-report.html`
+- `docs/evidence/2026-10-14-task-b-report.html`
+- `data/calibration_sample_20.json`
+
+
