@@ -508,6 +508,43 @@ def finetune_cmd(
         raise typer.Exit(code=1)
 
 
+@models_app.command("list")
+def list_models_cmd(
+    models_config: Path = typer.Option(
+        Path("specs/models.yaml"),
+        "--config",
+        "-c",
+        help="Path to models YAML config.",
+    ),
+):
+    """List all configured open and baseline models."""
+    if not models_config.exists():
+        console.print(f"[bold red]Config file not found:[/bold red] {models_config}")
+        raise typer.Exit(code=1)
+
+    with open(models_config, "r", encoding="utf-8") as f:
+        data = yaml.safe_load(f)
+
+    models = data.get("models", [])
+    table = Table(title="Configured Models (specs/models.yaml)", show_header=True)
+    table.add_column("Key", style="bold cyan")
+    table.add_column("Provider", style="green")
+    table.add_column("Model ID", style="white")
+    table.add_column("Family", style="yellow")
+    table.add_column("License", style="magenta")
+
+    for m in models:
+        table.add_row(
+            m.get("key", ""),
+            m.get("provider", ""),
+            m.get("model_id", ""),
+            m.get("family", ""),
+            m.get("license", ""),
+        )
+
+    console.print(table)
+
+
 @models_app.command("probe")
 def probe_models(
     models_config: Path = typer.Option(

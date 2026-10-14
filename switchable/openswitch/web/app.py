@@ -21,6 +21,9 @@ async def lifespan(app: FastAPI):
     logger.info("Initializing Open-Switch database tables...")
     await init_db()
     init_sentry()
+    if settings.demo_mode:
+        from openswitch.security import cleanup_old_demo_data
+        await cleanup_old_demo_data(max_age_hours=24)
     yield
     logger.info("Open-Switch server shutdown complete.")
 

@@ -26,6 +26,7 @@ from openswitch.judge.calibration_flow import (
 from openswitch.models import Dataset, Example, Experiment, Generation, HumanLabel, Judgment, Run
 from openswitch.pricing import PricingCatalog, load_pricing
 from openswitch.report import generate_standalone_html
+from openswitch.security import check_kill_switch, check_visitor_rate_limit, generate_experiment_csv
 from openswitch.web.events import broadcaster
 from openswitch.web.session import get_or_create_session
 
@@ -127,6 +128,7 @@ async def upload_dataset(
     session_hash: str = Depends(get_or_create_session),
 ):
     """Upload and validate a dataset with provenance defaults and deterministic splits."""
+    check_kill_switch()
     content = await file.read()
     if len(content) > settings.max_upload_mb * 1024 * 1024:
         raise HTTPException(
@@ -253,6 +255,9 @@ async def create_experiment(
     session_hash: str = Depends(get_or_create_session),
 ):
     """Create a new model evaluation experiment and launch background execution."""
+    check_kill_switch()
+    await check_visitor_rate_limit(session_hash)
+
     import uuid
     exp_id = str(uuid.uuid4())
 
@@ -266,6 +271,7 @@ async def create_experiment(
         exp = Experiment(
             id=exp_id,
             dataset_id=req.dataset_id,
+            session_hash=session_hash,
             name=req.name,
             config_json=json.dumps(cfg),
             config_hash=uuid.uuid4().hex[:16],
@@ -404,9 +410,31 @@ async def get_calibration_summary():
     }
 
 
+@api_router.get("/experiments/{experiment_id}/export.csv")
+async def get_experiment_report_csv(experiment_id: str):
+    """Export experiment results as formula-sanitized CSV."""
+    report_file = Path(f"docs/evidence/2026-10-14-task-b-full-run.json")
+    if not report_file.exists():
+        report_file = Path(f"docs/evidence/2026-10-14-task-a-full-run.json")
+
+    if report_file.exists():
+        data = json.loads(report_file.read_text(encoding="utf-8"))
+        csv_content = generate_experiment_csv(data)
+        return Response(
+            content=csv_content,
+            media_type="text/csv",
+            headers={
+                "Content-Disposition": f'attachment; filename="experiment_{experiment_id[:8]}_results.csv"'
+            },
+        )
+
+    raise HTTPException(status_code=404, detail="Experiment report not found.")
+
+
 @api_router.post("/finetunes")
 async def launch_finetune_job(req: FineTuneRequest):
     """Launch Tinker LoRA fine-tune and comparative k-shot evaluation."""
+    check_kill_switch()
     try:
         report = await run_finetune_vs_kshot(
             dataset_id=req.dataset_id,

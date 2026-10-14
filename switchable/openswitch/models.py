@@ -13,6 +13,7 @@ from sqlalchemy import (
     String,
     Text,
     UniqueConstraint,
+    text,
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
@@ -80,6 +81,7 @@ class Experiment(Base):
     id: Mapped[str] = mapped_column(String(64), primary_key=True, default=gen_uuid)
     name: Mapped[str] = mapped_column(String(255), nullable=False)
     dataset_id: Mapped[str] = mapped_column(String(64), ForeignKey("datasets.id"), nullable=False)
+    session_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     config_json: Mapped[str] = mapped_column(Text, nullable=False)
     config_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     status: Mapped[str] = mapped_column(String(32), nullable=False, default="created")
@@ -257,7 +259,11 @@ class Session(Base):
 
 
 async def init_db(engine_override=None) -> None:
-    """Create all database tables."""
+    """Create all database tables and apply lightweight column migrations."""
     target_engine = engine_override or engine
     async with target_engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
+        try:
+            await conn.execute(text("ALTER TABLE experiments ADD COLUMN session_hash VARCHAR(64)"))
+        except Exception:
+            pass  # Already exists

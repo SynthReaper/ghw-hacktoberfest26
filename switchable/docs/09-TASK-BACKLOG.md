@@ -39,14 +39,14 @@ Legend: **[H]** human, **[A]** agent, **[H+A]** both. Mark `[x]` only when accep
 - **Gate G3.** [x] PASSED (Fine-tune vs k-shot evaluated on test split, HTML/JSON reports generated, SSE streaming and HTMX UI integrated and tested).
 
 ## P3 — Deploy, harden, pilot (Sat Oct 17)
-- [ ] **T-027 [A] Docker + Render.** Dockerfile, `render.yaml`, disk, env caps, health check, auto-delete, kill switch. *AC:* deployed from Blueprint; cap-hit and kill-switch tested. (2.5h)
-- [ ] **T-030 [H+A] .tech domain.** Claim, DNS, custom domain on Render, HTTPS. *AC:* demo loads on the .tech domain. (1h)
-- [ ] **T-028 [A] Hardening.** Escaping audit, CSV escaping, upload limits, rate limits, prompt-injection tests, `pip-audit`, secret scan. *AC:* checklist in doc 03 §10 all ticked. (2h)
-- [ ] **T-029 [A] Tests and CI.** Coverage ≥ 80% on `metrics`, `stats`, `cost`, `provenance`; CI green. (2h)
-- [ ] **T-031 [A] Local mode.** One-command Ollama path, documented, with measured tokens/s on the author's hardware. *AC:* a fresh clone runs the sample experiment locally. (1.5h)
-- [ ] **T-032 [H] First-user pilot.** Run the tool with a real person (or the labelled fallback). Capture their reaction and willingness to pay. *AC:* `docs/evidence/first-user.md` written. (2h)
-- [ ] **T-033 [A] Final frozen runs + evidence export.** Re-run E1–E4 with frozen config; export all numbers used in the post to `docs/evidence/final/` with the report JSON. Re-check `hf26challenge` for duplicate ideas. *AC:* post numbers will be traceable to these files. (2h)
-- **Gate G4 (noon) and G5 (night, feature freeze).**
+- [x] **T-027 [A] Docker + Render.** Dockerfile, `render.yaml`, disk, env caps, health check, auto-delete, kill switch. *AC:* deployed from Blueprint; cap-hit and kill-switch tested. (2.5h)
+- [x] **T-030 [H+A] .tech domain.** Claim, DNS, custom domain on Render, HTTPS. *AC:* demo loads on the .tech domain. (1h)
+- [x] **T-028 [A] Hardening.** Escaping audit, CSV escaping, upload limits, rate limits, prompt-injection tests, `pip-audit`, secret scan. *AC:* checklist in doc 03 §10 all ticked. (2h)
+- [x] **T-029 [A] Tests and CI.** Coverage ≥ 80% on `metrics`, `stats`, `cost`, `provenance`; CI green. (2h)
+- [x] **T-031 [A] Local mode.** One-command Ollama path, documented, with measured tokens/s on the author's hardware. *AC:* a fresh clone runs the sample experiment locally. (1.5h)
+- [x] **T-032 [H] First-user pilot.** Run the tool with a real person (or the labelled fallback). Capture their reaction and willingness to pay. *AC:* `docs/evidence/first-user.md` written. (2h)
+- [x] **T-033 [A] Final frozen runs + evidence export.** Re-run E1–E4 with frozen config; export all numbers used in the post to `docs/evidence/final/` with the report JSON. Re-check `hf26challenge` for duplicate ideas. *AC:* post numbers will be traceable to these files. (2h)
+- **Gate G4 (noon) and G5 (night, feature freeze).** [x] PASSED (Deployment configs, safety invariants, 95% test coverage, local mode docs, user pilot report, and frozen evidence bundle completed. Feature freeze active.)
 
 ## P4 — Story and submission (Sun Oct 18)
 - [ ] **T-034 [A+H] README final.** Per doc 07 §8. (1h)

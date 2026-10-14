@@ -180,6 +180,7 @@ def layout(title: str, content: str, active_tab: str = "home") -> str:
       </nav>
     </div>
   </header>
+  {'<div style="background: rgba(239, 68, 68, 0.2); border-bottom: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1.25rem; text-align: center; font-size: 0.875rem; font-weight: 600;">[EMERGENCY PAUSE] Open-Switch kill switch is active. Evaluation runs and fine-tuning are suspended.</div>' if settings.kill_switch else ''}
   <main>
     {content}
   </main>

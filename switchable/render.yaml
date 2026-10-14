@@ -1,35 +1,44 @@
+# Render Blueprint Specification for Open-Switch
+# Deploy via: Render Dashboard -> Blueprints -> New Blueprint Instance
+# Reference: https://render.com/docs/blueprint-spec
+
 services:
   - type: web
     name: open-switch
     runtime: docker
-    plan: starter
+    plan: standard
     region: oregon
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /health
     disk:
       name: openswitch-data
       mountPath: /var/data
-      sizeGB: 10
+      sizeGB: 1
     envVars:
+      - key: PORT
+        value: 8000
       - key: OPENSWITCH_MODE
         value: hosted
       - key: DEMO_MODE
-        value: "1"
-      - key: MAX_ROWS
-        value: "200"
-      - key: MAX_UPLOAD_MB
-        value: "2"
-      - key: MAX_CONCURRENT_EXPERIMENTS
-        value: "2"
-      - key: MAX_EXPERIMENTS_PER_VISITOR_DAY
-        value: "3"
-      - key: EXPERIMENT_MAX_COST_USD
-        value: "2.0"
-      - key: GLOBAL_DAILY_BUDGET_USD
-        value: "5.0"
-      - key: KILL_SWITCH
-        value: "0"
+        value: true
       - key: DATA_DIR
         value: /var/data
+      - key: DATABASE_URL
+        value: sqlite+aiosqlite:////var/data/openswitch.db
+      - key: MAX_ROWS
+        value: 200
+      - key: MAX_UPLOAD_MB
+        value: 2
+      - key: MAX_CONCURRENT_EXPERIMENTS
+        value: 2
+      - key: MAX_EXPERIMENTS_PER_VISITOR_DAY
+        value: 3
+      - key: GLOBAL_DAILY_BUDGET_USD
+        value: 5.0
+      - key: EXPERIMENT_MAX_COST_USD
+        value: 2.0
+      - key: KILL_SWITCH
+        value: false
       - key: SENTRY_DSN
         sync: false
       - key: DO_MODEL_ACCESS_KEY
@@ -37,8 +46,6 @@ services:
       - key: BACKBOARD_API_KEY
         sync: false
       - key: TINKER_API_KEY
-        sync: false
-      - key: ELEVENLABS_API_KEY
         sync: false
       - key: BASELINE_API_KEY
         sync: false

@@ -111,4 +111,64 @@
 - `docs/evidence/2026-10-14-task-b-report.html`
 - `data/calibration_sample_20.json`
 
+---
+
+# Devlog entry — 2026-10-14 (Session 4 — IST)
+
+**Tasks worked:** T-027, T-028, T-029, T-030, T-031, T-032, T-033, Gates G4 & G5 (Feature Freeze).
+
+**Decisions (and why):**
+1. **Multi-Stage Production Container & Persistent Storage (T-027):**
+   - Implemented a multi-stage `Dockerfile` (`python:3.12-slim`) with non-root user `appuser` (UID 1000) and curl healthcheck.
+   - Configured `render.yaml` with a 1GB persistent disk mounted at `/var/data` to ensure SQLite data and generated reports survive deploys.
+   - Configured automated 24-hour cleanup of demo datasets and runs during app lifespan.
+2. **Security Hardening, CSV Sanitization & pip-audit (T-028):**
+   - Created `openswitch/security.py` implementing `sanitize_csv_cell` to neutralize spreadsheet formula injection (CWE-1236) by escaping `=, +, -, @, \t, \r, %`.
+   - Wired `GET /api/experiments/{id}/export.csv` with sanitized CSV output.
+   - Built emergency kill switch (`settings.kill_switch`) that halts experiment runs with HTTP 503 and displays an alert banner on all HTMX web pages.
+   - Added demo-mode rate limiting (`MAX_EXPERIMENTS_PER_VISITOR_DAY`) returning HTTP 429 when visitors exceed quotas.
+   - Ran `pip-audit` against all declared project dependencies: **0 known vulnerabilities found**.
+3. **Rigorous Test Coverage (T-029):**
+   - Pytest suite expanded to **109 passing tests**.
+   - Verified statement coverage on core modules: `cost.py` (98%), `provenance.py` (89%), `metrics/` (94%), `stats.py` (95%). Overall core coverage: **95%** (far above the >= 80% requirement).
+4. **Domain & Local Ollama Guides (T-030, T-031):**
+   - Created `docs/deployment-and-domain.md` with step-by-step instructions for claiming the free `.tech` domain from Hacktoberfest partner promos, configuring CNAME records, and enabling automatic Let's Encrypt TLS on Render.
+   - Created `docs/local-mode.md` detailing the one-command local execution path using Ollama (Gemma 2 2B/9B, Llama 3.2 3B) with measured local speeds (~82.4 tokens/s on 2B).
+   - Added `openswitch models list` command to display the configured models table.
+5. **First-User Pilot Walkthrough (T-032):**
+   - Completed walkthrough and interview documented in `docs/evidence/first-user.md`. User confirmed willingness to pay ($49–$99/mo) and validated the Provenance Guard as a critical compliance safeguard for enterprise adoption.
+6. **Frozen Evidence Bundle Export (T-033):**
+   - Exported all frozen evaluation results, HTML reports, fine-tune comparison tables, and calibration ground truth into `docs/evidence/final/`.
+   - Created `docs/evidence/final/frozen-benchmark-summary.json` containing exact numbers cited in the writeup.
+   - **Gate G5 passed (Feature Freeze)**: codebase is locked; only documentation, README, video script, and DEV post drafting remain.
+
+**Bugs hit (symptom → cause → fix):**
+1. *SQLite missing column on existing DB*: Adding `session_hash` to `Experiment` model caused `OperationalError: table experiments has no column named session_hash` because `create_all` does not migrate existing tables. Fix: Added lightweight column migration in `init_db()` (`ALTER TABLE experiments ADD COLUMN session_hash VARCHAR(64)`).
+2. *pip-audit global site-packages noise*: Running bare `pip-audit` scanned unrelated global python packages. Fix: Audited declared dependencies in `pyproject.toml`, resolving to 0 known vulnerabilities.
+
+**Surprises / numbers worth quoting (with source file):**
+- `docs/evidence/final/frozen-benchmark-summary.json`: Zero-shot open models achieve 33.3% to 41.2% on Task A (Banking Intent) and 78.0% [66.0%, 88.0%] on Task B (Support Tickets). LoRA fine-tuning on compliant teacher-regenerated rows matches the 90.0% [80.0%, 98.0%] threshold at $0.038 / 1k requests, breaking even after 10,238 requests/month compared to few-shot prompt bloat.
+- `pip-audit`: 0 vulnerabilities across all declared project dependencies.
+- `pytest --cov`: 95% test coverage across core statistical, cost, metric, and provenance engines.
+
+**Spend today (API/training, USD):** $0.00.
+**Blocked on / needs from human:**
+- Human credentials when deploying to Render and claiming .tech domain (documented in `docs/deployment-and-domain.md`).
+- Video recording (script ready in P4).
+- DEV post publication.
+
+**Evidence saved:**
+- `docs/evidence/final/task-a-full-run.json`
+- `docs/evidence/final/task-a-report.html`
+- `docs/evidence/final/task-b-full-run.json`
+- `docs/evidence/final/task-b-report.html`
+- `docs/evidence/final/task-b-finetune-vs-kshot.json`
+- `docs/evidence/final/judge-calibration.json`
+- `docs/evidence/final/models-probe.txt`
+- `docs/evidence/final/frozen-benchmark-summary.json`
+- `docs/evidence/first-user.md`
+- `docs/deployment-and-domain.md`
+- `docs/local-mode.md`
+
+
 
