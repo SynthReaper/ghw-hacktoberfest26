@@ -1,10 +1,10 @@
 """Tests for security hardening, CSV formula sanitization, rate limits, and demo cleanup."""
 
-from datetime import UTC, datetime, timedelta
 import uuid
+from datetime import UTC, datetime, timedelta
 
-from fastapi import HTTPException
 import pytest
+from fastapi import HTTPException
 
 from openswitch.config import settings
 from openswitch.db import session_context
@@ -33,7 +33,9 @@ def test_sanitize_csv_cell_neutralizes_formula_injection():
     assert sanitize_csv_cell("-200") == "'-200"
     assert sanitize_csv_cell("@SUM(A1:A10)") == "'@SUM(A1:A10)"
     assert sanitize_csv_cell("\t=SUM(1,2)") == "'\t=SUM(1,2)"
-    assert sanitize_csv_cell("  =HYPERLINK(\"http://evil.com\")") == "'  =HYPERLINK(\"http://evil.com\")"
+    assert (
+        sanitize_csv_cell('  =HYPERLINK("http://evil.com")') == '\'  =HYPERLINK("http://evil.com")'
+    )
 
     # Benign inputs
     assert sanitize_csv_cell("Normal text") == "Normal text"
@@ -46,7 +48,10 @@ def test_sanitize_csv_cell_neutralizes_formula_injection():
 
 def test_escape_html_text():
     """Verify HTML special characters are properly escaped to prevent XSS."""
-    assert escape_html_text("<script>alert('xss')</script>") == "&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;"
+    assert (
+        escape_html_text("<script>alert('xss')</script>")
+        == "&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;"
+    )
     assert escape_html_text("Hello & Goodbye") == "Hello &amp; Goodbye"
     assert escape_html_text('"Quoted"') == "&quot;Quoted&quot;"
     assert escape_html_text(None) == ""

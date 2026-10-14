@@ -1,10 +1,9 @@
 """Standalone HTML and JSON report generator for Open-Switch evaluation experiments (T-026)."""
 
-from dataclasses import dataclass
-from datetime import UTC, datetime
 import html
 import json
 import logging
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -47,7 +46,7 @@ def generate_pareto_svg(candidates: list[dict[str, Any]], primary_metric: str) -
             f'<line x1="{pad_left}" y1="{y_pos:.1f}" x2="{width - pad_right}" y2="{y_pos:.1f}" stroke="#e2e8f0" stroke-dasharray="3,3" />'
         )
         svg_elements.append(
-            f'<text x="{pad_left - 10}" y="{y_pos + 4:.1f}" font-size="11" fill="#64748b" text-anchor="end">{y_val*100:.0f}%</text>'
+            f'<text x="{pad_left - 10}" y="{y_pos + 4:.1f}" font-size="11" fill="#64748b" text-anchor="end">{y_val * 100:.0f}%</text>'
         )
 
     for i in range(5):
@@ -65,7 +64,7 @@ def generate_pareto_svg(candidates: list[dict[str, Any]], primary_metric: str) -
         f'<text x="{width / 2}" y="{height - 10}" font-size="12" font-weight="600" fill="#334155" text-anchor="middle">Cost per 1,000 Requests (USD)</text>'
     )
     svg_elements.append(
-        f'<text x="20" y="{height / 2}" font-size="12" font-weight="600" fill="#334155" text-anchor="middle" transform="rotate(-90 20 {height/2})">Quality ({escape(primary_metric)})</text>'
+        f'<text x="20" y="{height / 2}" font-size="12" font-weight="600" fill="#334155" text-anchor="middle" transform="rotate(-90 20 {height / 2})">Quality ({escape(primary_metric)})</text>'
     )
 
     # Plot candidate points
@@ -105,15 +104,21 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
     threshold = rec.get("threshold", 0.85)
     rec_candidate = escape(rec.get("recommended_candidate", "None"))
 
-    badge_color = "#10b981" if "switch" in decision else ("#f59e0b" if "fine_tune" in decision else "#ef4444")
-    badge_title = "RECOMMENDED SWITCH" if "switch" in decision else ("FINE-TUNE PATH" if "fine_tune" in decision else "NO SAFE SWITCH")
+    badge_color = (
+        "#10b981" if "switch" in decision else ("#f59e0b" if "fine_tune" in decision else "#ef4444")
+    )
+    badge_title = (
+        "RECOMMENDED SWITCH"
+        if "switch" in decision
+        else ("FINE-TUNE PATH" if "fine_tune" in decision else "NO SAFE SWITCH")
+    )
 
     # Table rows
     candidates_list = []
     # Collect all candidates
     for c in rec.get("eligible_candidates", []):
         c_copy = dict(c)
-        c_copy["is_recommended"] = (c.get("model_key") == rec.get("recommended_candidate"))
+        c_copy["is_recommended"] = c.get("model_key") == rec.get("recommended_candidate")
         candidates_list.append(c_copy)
     for c in rec.get("ineligible_candidates", []):
         c_copy = dict(c)
@@ -131,16 +136,20 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
         err = c.get("error_rate", 0.0)
         is_rec = c.get("is_recommended", False)
 
-        tag = '<span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:600;padding:2px 8px;border-radius:9999px;">WINNER</span>' if is_rec else ''
+        tag = (
+            '<span style="background:#dcfce7;color:#166534;font-size:11px;font-weight:600;padding:2px 8px;border-radius:9999px;">WINNER</span>'
+            if is_rec
+            else ""
+        )
         row_bg = "background:#f0fdf4;" if is_rec else ""
 
         table_rows.append(f"""
         <tr style="{row_bg}border-bottom:1px solid #e2e8f0;">
           <td style="padding:10px 14px;font-family:monospace;font-weight:600;">{m_key} {tag}</td>
-          <td style="padding:10px 14px;font-weight:600;">{pt*100:.1f}% <span style="font-size:11px;color:#64748b;font-weight:normal;">[{ci_l*100:.1f}%, {ci_u*100:.1f}%]</span></td>
+          <td style="padding:10px 14px;font-weight:600;">{pt * 100:.1f}% <span style="font-size:11px;color:#64748b;font-weight:normal;">[{ci_l * 100:.1f}%, {ci_u * 100:.1f}%]</span></td>
           <td style="padding:10px 14px;color:#334155;">${cost_1k:.4f}</td>
           <td style="padding:10px 14px;color:#334155;">{lat:.0f}ms</td>
-          <td style="padding:10px 14px;color:{'#ef4444' if err > 0.05 else '#64748b'};">{err:.1%}</td>
+          <td style="padding:10px 14px;color:{"#ef4444" if err > 0.05 else "#64748b"};">{err:.1%}</td>
         </tr>
         """)
 
@@ -162,7 +171,11 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
         </div>
         """)
 
-    worst_section = "".join(worst_rows) if worst_rows else "<p style='color:#64748b;'>No catastrophic failure examples recorded.</p>"
+    worst_section = (
+        "".join(worst_rows)
+        if worst_rows
+        else "<p style='color:#64748b;'>No catastrophic failure examples recorded.</p>"
+    )
 
     # Pareto SVG
     primary_metric = escape(report_data.get("primary_metric", "Accuracy"))
@@ -172,8 +185,14 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
     calib = report_data.get("calibration", {})
     calib_tier = calib.get("tier", "reliable")
     calib_kappa = calib.get("cohen_kappa", 0.848)
-    calib_banner = escape(calib.get("banner_message", f"Judge Cohen's kappa = {calib_kappa:.3f} ({calib_tier})."))
-    calib_color = "#10b981" if calib_tier == "reliable" else ("#f59e0b" if calib_tier == "moderate" else "#ef4444")
+    calib_banner = escape(
+        calib.get("banner_message", f"Judge Cohen's kappa = {calib_kappa:.3f} ({calib_tier}).")
+    )
+    calib_color = (
+        "#10b981"
+        if calib_tier == "reliable"
+        else ("#f59e0b" if calib_tier == "moderate" else "#ef4444")
+    )
 
     # Reproducibility
     repro = report_data.get("reproducibility", {})
@@ -201,7 +220,7 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
           <h1 style="margin:0; font-size:1.75rem; font-weight:800; letter-spacing:-0.025em; color:#0f172a;">Open-Switch Evaluation Report</h1>
-          <p style="margin:4px 0 0; color:#64748b; font-size:0.875rem;">Dataset: <strong>{dataset_name}</strong> (n={test_size}) · Git Commit: <code>{git_commit}</code> · {created_at}</p>
+          <p style="margin:4px 0 0; color:#64748b; font-size:0.875rem;">Experiment: <code>{exp_id}</code> · Dataset: <strong>{dataset_name}</strong> (n={test_size}) · Git Commit: <code>{git_commit}</code> · {created_at}</p>
         </div>
         <span class="badge" style="background:{badge_color};">{badge_title}</span>
       </div>
@@ -212,7 +231,7 @@ def generate_standalone_html(report_data: dict[str, Any]) -> str:
       <h2 style="margin:0 0 8px; font-size:1.25rem; font-weight:700;">{headline}</h2>
       <p style="margin:0 0 12px; color:#334155;">{details}</p>
       <div style="font-size:0.8125rem; color:#64748b;">
-        Threshold: <strong>{threshold*100:.0f}% lower 95% CI bound</strong> · 10,000 percentile bootstrap resamples.
+        Threshold: <strong>{threshold * 100:.0f}% lower 95% CI bound</strong> · 10,000 percentile bootstrap resamples.
       </div>
     </div>
 

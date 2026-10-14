@@ -22,7 +22,6 @@ from openswitch.metrics.schema_valid import is_schema_valid
 from openswitch.models import Dataset, Example, Experiment, Generation, Judgment, Run, Score
 from openswitch.obs import check_and_report_experiment_anomalies, gen_ai_span
 from openswitch.pricing import load_pricing
-from openswitch.providers.fake import FakeProvider
 from openswitch.providers.registry import registry
 from openswitch.recommend import CandidateSummary, generate_recommendation
 from openswitch.runner import ExperimentRunner
@@ -429,7 +428,10 @@ class PipelineOrchestrator:
 
                 if primary_metric in metrics_cis:
                     prim_ci = metrics_cis[primary_metric]
-                elif primary_metric == "composite" and "composite_critical_fields_correct" in metrics_cis:
+                elif (
+                    primary_metric == "composite"
+                    and "composite_critical_fields_correct" in metrics_cis
+                ):
                     prim_ci = metrics_cis["composite_critical_fields_correct"]
                 elif (
                     "parity_rate" in judge_stats_dict

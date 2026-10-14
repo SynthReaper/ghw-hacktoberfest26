@@ -2,16 +2,11 @@
 
 import json
 import uuid
+
 import pytest
 from sqlalchemy import select
 
 from openswitch.db import session_context
-from openswitch.judge.calibration import (
-    calculate_agreement,
-    calculate_cohen_kappa,
-    compute_confusion_matrix,
-    judge_reliability_tier,
-)
 from openswitch.judge.calibration_flow import (
     analyze_calibration,
     map_human_choice_to_verdict,
@@ -156,9 +151,7 @@ async def test_sample_blind_pairs_and_save_human_label():
     await save_human_label(generation_id=gen.id, human_verdict="win", labeler="tester")
 
     async with session_context() as session:
-        res = await session.execute(
-            select(HumanLabel).where(HumanLabel.generation_id == gen.id)
-        )
+        res = await session.execute(select(HumanLabel).where(HumanLabel.generation_id == gen.id))
         label = res.scalar_one_or_none()
         assert label is not None
         assert label.label == "win"

@@ -1,11 +1,11 @@
 """Server-Sent Events (SSE) publisher and subscription manager."""
 
 import asyncio
+import json
+import logging
 from collections import defaultdict
 from collections.abc import AsyncGenerator
 from datetime import UTC, datetime
-import json
-import logging
 from typing import Any
 
 logger = logging.getLogger("openswitch.web.events")

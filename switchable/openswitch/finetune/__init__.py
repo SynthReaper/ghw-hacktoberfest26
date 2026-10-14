@@ -1,4 +1,8 @@
-from openswitch.finetune.eval import CandidateResult, FinetuneComparisonReport, run_finetune_vs_kshot
+from openswitch.finetune.eval import (
+    CandidateResult,
+    FinetuneComparisonReport,
+    run_finetune_vs_kshot,
+)
 from openswitch.finetune.kshot import KNearestFewShot
 from openswitch.finetune.tinker import FineTuneJobResult, TinkerFineTuner
 

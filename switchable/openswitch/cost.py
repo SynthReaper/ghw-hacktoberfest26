@@ -1,6 +1,7 @@
 """Cost, latency, and savings projection models with fine-tune break-even calculations."""
 
 import math
+from collections.abc import Sequence
 from dataclasses import asdict, dataclass
 from typing import Literal
 
@@ -73,7 +74,7 @@ def calculate_request_cost(
 
 def calculate_model_cost_summary(
     model_key: str,
-    requests_tokens: list[tuple[int | float, int | float]],
+    requests_tokens: Sequence[tuple[int | float, int | float]],
     price_in_per_m: float,
     price_out_per_m: float,
     pricing_source: str,
@@ -183,13 +184,14 @@ def calculate_finetune_breakeven(
     """
     per_req_savings = baseline_cost_per_request - candidate_cost_per_request
 
+    months_at_vol: dict[int, float | None]
     if per_req_savings <= 0 or one_time_training_cost_usd <= 0:
         breakeven_reqs = None
         months_at_vol = {vol: None for vol in reference_volumes}
     else:
         breakeven_reqs = int(math.ceil(one_time_training_cost_usd / per_req_savings))
         months_at_vol = {
-            vol: round(breakeven_reqs / vol, 2) if vol > 0 else None for vol in reference_volumes
+            vol: (round(breakeven_reqs / vol, 2) if vol > 0 else None) for vol in reference_volumes
         }
 
     # Record training cost in assumptions

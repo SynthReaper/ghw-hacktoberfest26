@@ -1,10 +1,9 @@
 """Teacher regeneration: produce open-model training references from non-trainable rows."""
 
-from dataclasses import dataclass
-from datetime import UTC, datetime
 import json
 import logging
-from typing import Any
+from dataclasses import dataclass
+from datetime import UTC, datetime
 
 from sqlalchemy import select
 
@@ -72,10 +71,14 @@ async def regenerate_teacher_references(
 
     async with session_context() as session:
         # Load train examples
-        query = select(Example).where(
-            Example.dataset_id == dataset_id,
-            Example.split == "train",
-        ).order_by(Example.idx)
+        query = (
+            select(Example)
+            .where(
+                Example.dataset_id == dataset_id,
+                Example.split == "train",
+            )
+            .order_by(Example.idx)
+        )
 
         res = await session.execute(query)
         train_examples = list(res.scalars().all())

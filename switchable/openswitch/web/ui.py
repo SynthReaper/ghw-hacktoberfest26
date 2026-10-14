@@ -1,18 +1,14 @@
 """HTMX Web UI views: Swiss technical precision, zero JS build, keyboard accessible (T-025)."""
 
-from datetime import UTC, datetime
 import html
-import json
-from pathlib import Path
-from typing import Any
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends
 from fastapi.responses import HTMLResponse
 from sqlalchemy import select
 
 from openswitch.config import settings
 from openswitch.db import session_context
-from openswitch.models import Dataset, Experiment
+from openswitch.models import Dataset
 from openswitch.web.session import get_or_create_session
 
 ui_router = APIRouter()
@@ -27,10 +23,12 @@ def layout(title: str, content: str, active_tab: str = "home") -> str:
         ("finetune", "/finetune", "LoRA Fine-Tune"),
     ]
 
-    nav_links = "".join([
-        f'<a href="{url}" class="nav-link {"active" if tab == active_tab else ""}">{name}</a>'
-        for tab, url, name in nav_items
-    ])
+    nav_links = "".join(
+        [
+            f'<a href="{url}" class="nav-link {"active" if tab == active_tab else ""}">{name}</a>'
+            for tab, url, name in nav_items
+        ]
+    )
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -180,7 +178,7 @@ def layout(title: str, content: str, active_tab: str = "home") -> str:
       </nav>
     </div>
   </header>
-  {'<div style="background: rgba(239, 68, 68, 0.2); border-bottom: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1.25rem; text-align: center; font-size: 0.875rem; font-weight: 600;">[EMERGENCY PAUSE] Open-Switch kill switch is active. Evaluation runs and fine-tuning are suspended.</div>' if settings.kill_switch else ''}
+  {'<div style="background: rgba(239, 68, 68, 0.2); border-bottom: 1px solid #ef4444; color: #fca5a5; padding: 0.75rem 1.25rem; text-align: center; font-size: 0.875rem; font-weight: 600;">[EMERGENCY PAUSE] Open-Switch kill switch is active. Evaluation runs and fine-tuning are suspended.</div>' if settings.kill_switch else ""}
   <main>
     {content}
   </main>
@@ -195,10 +193,12 @@ async def home_page(session_hash: str = Depends(get_or_create_session)):
         res = await session.execute(select(Dataset).order_by(Dataset.created_at.desc()))
         datasets = list(res.scalars().all())
 
-    dataset_options = "".join([
-        f'<option value="{ds.id}">{html.escape(ds.name)} ({ds.n_rows} rows)</option>'
-        for ds in datasets
-    ])
+    dataset_options = "".join(
+        [
+            f'<option value="{ds.id}">{html.escape(ds.name)} ({ds.n_rows} rows)</option>'
+            for ds in datasets
+        ]
+    )
 
     models = [
         ("gemma-2b-local", "Gemma 2 2B (Local)", "Ollama", "$0.00 / Local"),
@@ -209,16 +209,18 @@ async def home_page(session_hash: str = Depends(get_or_create_session)):
         ("bb-qwen-7b", "Qwen 2.5 7B", "Backboard", "$0.20 in / $0.60 out"),
     ]
 
-    model_checkboxes = "".join([
-        f'''<label style="display:flex; align-items:center; gap:0.75rem; background:#0d0e14; border:1px solid var(--surface-border); padding:0.75rem 1rem; border-radius:6px; cursor:pointer;">
+    model_checkboxes = "".join(
+        [
+            f'''<label style="display:flex; align-items:center; gap:0.75rem; background:#0d0e14; border:1px solid var(--surface-border); padding:0.75rem 1rem; border-radius:6px; cursor:pointer;">
           <input type="checkbox" name="models" value="{key}" checked style="width:18px; height:18px;">
           <div style="flex:1;">
             <div style="font-weight:600; font-size:0.875rem;">{name}</div>
             <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">{provider} · {price}</div>
           </div>
         </label>'''
-        for key, name, provider, price in models
-    ])
+            for key, name, provider, price in models
+        ]
+    )
 
     body = f"""
     <div style="margin-bottom: 2rem;">

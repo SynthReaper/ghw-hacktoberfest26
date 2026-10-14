@@ -1,14 +1,21 @@
 """FastAPI REST API routes for datasets, models, experiments, calibration, and fine-tuning."""
 
-import asyncio
-from datetime import UTC, datetime
 import json
 import logging
-from pathlib import Path
 import tempfile
-from typing import Any
+from datetime import UTC, datetime
+from pathlib import Path
 
-from fastapi import APIRouter, BackgroundTasks, Depends, File, HTTPException, Response, UploadFile, status
+from fastapi import (
+    APIRouter,
+    BackgroundTasks,
+    Depends,
+    File,
+    HTTPException,
+    Response,
+    UploadFile,
+    status,
+)
 from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -18,13 +25,12 @@ from openswitch.datasets.importer import import_dataset_from_file
 from openswitch.db import session_context
 from openswitch.finetune.eval import run_finetune_vs_kshot
 from openswitch.judge.calibration_flow import (
-    analyze_calibration,
     map_human_choice_to_verdict,
     sample_blind_pairs,
     save_human_label,
 )
-from openswitch.models import Dataset, Example, Experiment, Generation, HumanLabel, Judgment, Run
-from openswitch.pricing import PricingCatalog, load_pricing
+from openswitch.models import Dataset, Example, Experiment, Run
+from openswitch.pricing import load_pricing
 from openswitch.report import generate_standalone_html
 from openswitch.security import check_kill_switch, check_visitor_rate_limit, generate_experiment_csv
 from openswitch.web.events import broadcaster
@@ -35,6 +41,7 @@ api_router = APIRouter(prefix="/api")
 
 
 # --- Pydantic Schemas ---
+
 
 class CreateExperimentRequest(BaseModel):
     name: str = Field(..., description="Experiment name")
@@ -60,6 +67,7 @@ class FineTuneRequest(BaseModel):
 
 # --- Endpoints ---
 
+
 @api_router.get("/health")
 async def health_check():
     """Service health and operational status."""
@@ -79,7 +87,10 @@ async def list_models():
     pricing_file = Path("specs/pricing.yaml")
 
     import yaml
-    models_data = yaml.safe_load(models_file.read_text(encoding="utf-8")) if models_file.exists() else {}
+
+    models_data = (
+        yaml.safe_load(models_file.read_text(encoding="utf-8")) if models_file.exists() else {}
+    )
     catalog = load_pricing(pricing_file) if pricing_file.exists() else None
 
     models_list = []
@@ -88,33 +99,37 @@ async def list_models():
         for spec in models_items:
             key = spec.get("key", "")
             price = catalog.models.get(key) if catalog else None
-            models_list.append({
-                "key": key,
-                "name": spec.get("model_id", key),
-                "provider": spec.get("provider", "local"),
-                "family": spec.get("family", "open"),
-                "license": spec.get("license", "Open Weights"),
-                "is_local": spec.get("provider") == "ollama",
-                "price_in_per_mtok": price.price_in_per_mtok if price else 0.0,
-                "price_out_per_mtok": price.price_out_per_mtok if price else 0.0,
-                "verified_on": price.verified_on if price else None,
-                "price_source_url": price.source_url if price else None,
-            })
+            models_list.append(
+                {
+                    "key": key,
+                    "name": spec.get("model_id", key),
+                    "provider": spec.get("provider", "local"),
+                    "family": spec.get("family", "open"),
+                    "license": spec.get("license", "Open Weights"),
+                    "is_local": spec.get("provider") == "ollama",
+                    "price_in_per_mtok": price.price_in_per_mtok if price else 0.0,
+                    "price_out_per_mtok": price.price_out_per_mtok if price else 0.0,
+                    "verified_on": price.verified_on if price else None,
+                    "price_source_url": price.source_url if price else None,
+                }
+            )
     elif isinstance(models_items, dict):
         for key, spec in models_items.items():
             price = catalog.models.get(key) if catalog else None
-            models_list.append({
-                "key": key,
-                "name": spec.get("name", key),
-                "provider": spec.get("provider", "local"),
-                "family": spec.get("family", "open"),
-                "license": spec.get("license", "Open Weights"),
-                "is_local": spec.get("provider") == "ollama",
-                "price_in_per_mtok": price.price_in_per_mtok if price else 0.0,
-                "price_out_per_mtok": price.price_out_per_mtok if price else 0.0,
-                "verified_on": price.verified_on if price else None,
-                "price_source_url": price.source_url if price else None,
-            })
+            models_list.append(
+                {
+                    "key": key,
+                    "name": spec.get("name", key),
+                    "provider": spec.get("provider", "local"),
+                    "family": spec.get("family", "open"),
+                    "license": spec.get("license", "Open Weights"),
+                    "is_local": spec.get("provider") == "ollama",
+                    "price_in_per_mtok": price.price_in_per_mtok if price else 0.0,
+                    "price_out_per_mtok": price.price_out_per_mtok if price else 0.0,
+                    "verified_on": price.verified_on if price else None,
+                    "price_source_url": price.source_url if price else None,
+                }
+            )
 
     return {"models": models_list}
 
@@ -223,7 +238,9 @@ async def _execute_experiment_task(exp_id: str, req: CreateExperimentRequest):
     from openswitch.pipeline import PipelineOrchestrator
 
     try:
-        await broadcaster.publish(exp_id, "status", {"status": "running", "message": "Starting evaluation runs..."})
+        await broadcaster.publish(
+            exp_id, "status", {"status": "running", "message": "Starting evaluation runs..."}
+        )
 
         orchestrator = PipelineOrchestrator(fake_mode=True)
         task_config = {"type": "classification", "labels": []}
@@ -237,12 +254,16 @@ async def _execute_experiment_task(exp_id: str, req: CreateExperimentRequest):
         )
 
         rec = report_data.get("recommendation", {})
-        await broadcaster.publish(exp_id, "complete", {
-            "status": "completed",
-            "report_id": exp_id,
-            "headline": rec.get("headline", "Complete"),
-            "recommended_candidate": rec.get("recommended_candidate"),
-        })
+        await broadcaster.publish(
+            exp_id,
+            "complete",
+            {
+                "status": "completed",
+                "report_id": exp_id,
+                "headline": rec.get("headline", "Complete"),
+                "recommended_candidate": rec.get("recommended_candidate"),
+            },
+        )
     except Exception as e:
         logger.error(f"Experiment {exp_id} failed: {e}", exc_info=True)
         await broadcaster.publish(exp_id, "error", {"status": "failed", "error": str(e)})
@@ -259,6 +280,7 @@ async def create_experiment(
     await check_visitor_rate_limit(session_hash)
 
     import uuid
+
     exp_id = str(uuid.uuid4())
 
     async with session_context() as session:
@@ -339,16 +361,18 @@ async def cancel_experiment(experiment_id: str):
         exp.status = "cancelled"
         await session.commit()
 
-    await broadcaster.publish(experiment_id, "status", {"status": "cancelled", "message": "Experiment was cancelled."})
+    await broadcaster.publish(
+        experiment_id, "status", {"status": "cancelled", "message": "Experiment was cancelled."}
+    )
     return {"status": "cancelled", "experiment_id": experiment_id}
 
 
 @api_router.get("/experiments/{experiment_id}/report.json")
 async def get_experiment_report_json(experiment_id: str):
     """Export experiment report as raw JSON."""
-    report_file = Path(f"docs/evidence/2026-10-14-task-b-full-run.json")
+    report_file = Path("docs/evidence/2026-10-14-task-b-full-run.json")
     if not report_file.exists():
-        report_file = Path(f"docs/evidence/2026-10-14-task-a-full-run.json")
+        report_file = Path("docs/evidence/2026-10-14-task-a-full-run.json")
 
     if report_file.exists():
         return JSONResponse(content=json.loads(report_file.read_text(encoding="utf-8")))
@@ -359,9 +383,9 @@ async def get_experiment_report_json(experiment_id: str):
 @api_router.get("/experiments/{experiment_id}/report.html", response_class=HTMLResponse)
 async def get_experiment_report_html(experiment_id: str):
     """Export standalone HTML report."""
-    report_file = Path(f"docs/evidence/2026-10-14-task-b-full-run.json")
+    report_file = Path("docs/evidence/2026-10-14-task-b-full-run.json")
     if not report_file.exists():
-        report_file = Path(f"docs/evidence/2026-10-14-task-a-full-run.json")
+        report_file = Path("docs/evidence/2026-10-14-task-a-full-run.json")
 
     if report_file.exists():
         data = json.loads(report_file.read_text(encoding="utf-8"))
@@ -390,7 +414,9 @@ async def get_next_calibration_pair():
 async def submit_calibration_label(req: CalibrationLabelRequest):
     """Submit human rating for a blind pair."""
     h_verdict = map_human_choice_to_verdict(req.choice, req.cand_is_a)
-    await save_human_label(generation_id=req.generation_id, human_verdict=h_verdict, labeler=req.labeler)
+    await save_human_label(
+        generation_id=req.generation_id, human_verdict=h_verdict, labeler=req.labeler
+    )
     return {"status": "recorded", "verdict": h_verdict, "generation_id": req.generation_id}
 
 
@@ -413,9 +439,9 @@ async def get_calibration_summary():
 @api_router.get("/experiments/{experiment_id}/export.csv")
 async def get_experiment_report_csv(experiment_id: str):
     """Export experiment results as formula-sanitized CSV."""
-    report_file = Path(f"docs/evidence/2026-10-14-task-b-full-run.json")
+    report_file = Path("docs/evidence/2026-10-14-task-b-full-run.json")
     if not report_file.exists():
-        report_file = Path(f"docs/evidence/2026-10-14-task-a-full-run.json")
+        report_file = Path("docs/evidence/2026-10-14-task-a-full-run.json")
 
     if report_file.exists():
         data = json.loads(report_file.read_text(encoding="utf-8"))

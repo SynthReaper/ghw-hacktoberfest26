@@ -1,7 +1,7 @@
 """FastAPI application factory and middleware configuration."""
 
-from contextlib import asynccontextmanager
 import logging
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -23,6 +23,7 @@ async def lifespan(app: FastAPI):
     init_sentry()
     if settings.demo_mode:
         from openswitch.security import cleanup_old_demo_data
+
         await cleanup_old_demo_data(max_age_hours=24)
     yield
     logger.info("Open-Switch server shutdown complete.")
@@ -40,13 +41,16 @@ def create_app() -> FastAPI:
     # CORS configuration
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"] if settings.openswitch_mode == "local" else ["https://*.tech", "https://*.onrender.com"],
+        allow_origins=["*"]
+        if settings.openswitch_mode == "local"
+        else ["https://*.tech", "https://*.onrender.com"],
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
 
     from openswitch.web.session import SessionMiddleware
+
     app.add_middleware(SessionMiddleware)
 
     # Mount API and UI routers

@@ -1,9 +1,9 @@
 """Security hardening, CSV formula sanitization, rate limiting, and demo cleanup."""
 
-from datetime import UTC, datetime, timedelta
 import html
 import io
 import logging
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
 from fastapi import HTTPException, status
@@ -11,7 +11,10 @@ from sqlalchemy import delete, func, select
 
 from openswitch.config import settings
 from openswitch.db import session_context
-from openswitch.models import Dataset, Experiment, Generation, HumanLabel, Judgment, Report, Run, Score
+from openswitch.models import (
+    Dataset,
+    Experiment,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -103,9 +106,7 @@ async def cleanup_old_demo_data(max_age_hours: int = 24) -> int:
                 deleted_count += len(old_exp_ids)
 
             # Find old demo datasets
-            ds_res = await session.execute(
-                select(Dataset.id).where(Dataset.created_at < cutoff)
-            )
+            ds_res = await session.execute(select(Dataset.id).where(Dataset.created_at < cutoff))
             old_ds_ids = ds_res.scalars().all()
             if old_ds_ids:
                 await session.execute(delete(Dataset).where(Dataset.id.in_(old_ds_ids)))
@@ -113,7 +114,9 @@ async def cleanup_old_demo_data(max_age_hours: int = 24) -> int:
 
             await session.commit()
             if deleted_count > 0:
-                logger.info(f"Cleaned up {deleted_count} expired demo records older than {max_age_hours}h.")
+                logger.info(
+                    f"Cleaned up {deleted_count} expired demo records older than {max_age_hours}h."
+                )
     except Exception as e:
         logger.error(f"Error during demo data cleanup: {e}")
 
@@ -128,18 +131,20 @@ def generate_experiment_csv(data: dict[str, Any]) -> str:
     writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)
 
     # Header
-    writer.writerow([
-        "model_key",
-        "model_name",
-        "family",
-        "primary_metric",
-        "ci_lower",
-        "ci_upper",
-        "cost_per_1k_usd",
-        "latency_ms",
-        "status",
-        "recommendation",
-    ])
+    writer.writerow(
+        [
+            "model_key",
+            "model_name",
+            "family",
+            "primary_metric",
+            "ci_lower",
+            "ci_upper",
+            "cost_per_1k_usd",
+            "latency_ms",
+            "status",
+            "recommendation",
+        ]
+    )
 
     rec = data.get("recommendation", {})
     recommended_model = rec.get("recommended_candidate")

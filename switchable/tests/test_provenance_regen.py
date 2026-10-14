@@ -2,6 +2,7 @@
 
 import json
 import uuid
+
 import pytest
 from sqlalchemy import select
 
@@ -11,7 +12,6 @@ from openswitch.db import session_context
 from openswitch.finetune.tinker import TinkerFineTuner
 from openswitch.models import Dataset, Example
 from openswitch.providers.fake import FakeProvider
-from openswitch.providers.registry import registry
 
 
 @pytest.mark.asyncio
@@ -81,7 +81,9 @@ async def test_tinker_fine_tuner_hard_blocks_disallowed_rows():
         train_allowed=False,
     )
     with pytest.raises(ProvenanceViolationError):
-        await tuner.run_training(base_model="qwen-2.5-7b", train_examples=[ex_blocked], dry_run=True)
+        await tuner.run_training(
+            base_model="qwen-2.5-7b", train_examples=[ex_blocked], dry_run=True
+        )
 
 
 @pytest.mark.asyncio

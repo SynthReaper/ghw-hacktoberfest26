@@ -15,12 +15,6 @@ from rich.table import Table
 from openswitch.config import settings
 from openswitch.datasets.importer import DatasetImporter
 from openswitch.db import session_context
-from openswitch.judge.calibration import (
-    calculate_agreement,
-    calculate_cohen_kappa,
-    compute_confusion_matrix,
-    judge_reliability_tier,
-)
 from openswitch.models import init_db
 from openswitch.pipeline import PipelineOrchestrator
 from openswitch.pricing import load_pricing
@@ -319,10 +313,14 @@ def calibrate_cmd(
     paired_data: list[dict[str, str]] = []
 
     if interactive:
-        console.print(f"[bold cyan]Starting blind judge calibration session ({sample_size} pairs)...[/bold cyan]")
+        console.print(
+            f"[bold cyan]Starting blind judge calibration session ({sample_size} pairs)...[/bold cyan]"
+        )
         pairs = asyncio.run(sample_blind_pairs(sample_size=sample_size))
         if not pairs:
-            console.print("[yellow][WARN] No evaluated judge pairs found in database to calibrate.[/yellow]")
+            console.print(
+                "[yellow][WARN] No evaluated judge pairs found in database to calibrate.[/yellow]"
+            )
             raise typer.Exit(code=1)
 
         for i, pair in enumerate(pairs, 1):
@@ -342,12 +340,16 @@ def calibrate_cmd(
             h_verdict = map_human_choice_to_verdict(choice, pair.option_a_is_candidate)
             asyncio.run(save_human_label(pair.generation_id, h_verdict))
 
-            paired_data.append({
-                "human": h_verdict,
-                "judge": pair.judge_verdict,
-                "generation_id": pair.generation_id,
-            })
-            console.print(f"  Recorded verdict: [green]{h_verdict}[/green] (Judge: [dim]{pair.judge_verdict}[/dim])\n")
+            paired_data.append(
+                {
+                    "human": h_verdict,
+                    "judge": pair.judge_verdict,
+                    "generation_id": pair.generation_id,
+                }
+            )
+            console.print(
+                f"  Recorded verdict: [green]{h_verdict}[/green] (Judge: [dim]{pair.judge_verdict}[/dim])\n"
+            )
 
     elif labels_file and labels_file.exists():
         with open(labels_file, encoding="utf-8") as f:
@@ -368,8 +370,18 @@ def calibrate_cmd(
     console.print(f"[bold]Observed Agreement:[/bold] {analysis.agreement_rate:.1%}")
     console.print(f"[bold]Cohen's Kappa:[/bold] {analysis.cohen_kappa:.3f}")
 
-    border = "green" if analysis.tier == "reliable" else ("yellow" if analysis.tier == "moderate" else "red")
-    console.print(Panel(analysis.banner_message, title=f"Judge Reliability: {analysis.tier.upper()}", border_style=border))
+    border = (
+        "green"
+        if analysis.tier == "reliable"
+        else ("yellow" if analysis.tier == "moderate" else "red")
+    )
+    console.print(
+        Panel(
+            analysis.banner_message,
+            title=f"Judge Reliability: {analysis.tier.upper()}",
+            border_style=border,
+        )
+    )
 
     # Confusion matrix
     categories = sorted(analysis.confusion_matrix.keys())
@@ -392,7 +404,6 @@ def calibrate_cmd(
     }
     save_path.write_text(json.dumps(report_dict, indent=2), encoding="utf-8")
     console.print(f"[dim]Saved calibration results to {save_path}[/dim]")
-
 
 
 @app.command("report")
@@ -476,6 +487,7 @@ def finetune_cmd(
 ):
     """Launch LoRA fine-tuning and compare against zero-shot and k-shot baselines."""
     from rich.markdown import Markdown
+
     from openswitch.finetune.eval import run_finetune_vs_kshot
 
     console.print(
@@ -522,7 +534,7 @@ def list_models_cmd(
         console.print(f"[bold red]Config file not found:[/bold red] {models_config}")
         raise typer.Exit(code=1)
 
-    with open(models_config, "r", encoding="utf-8") as f:
+    with open(models_config, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
     models = data.get("models", [])

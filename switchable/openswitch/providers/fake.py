@@ -152,10 +152,10 @@ class RealisticTaskProvider(ChatProvider):
 
         low_input = user_msg.lower()
         matched = None
-        for l in labels:
-            clean_l = l.replace("_", " ")
+        for lbl in labels:
+            clean_l = lbl.replace("_", " ")
             if any(w in low_input for w in clean_l.split()):
-                matched = l
+                matched = lbl
                 break
 
         if not matched:
@@ -215,13 +215,22 @@ class RealisticTaskProvider(ChatProvider):
 
         if abs(len_a - len_b) < 15:
             return json.dumps(
-                {"verdict": "tie", "reason": "Both answers satisfy the rubric with equal precision."}
+                {
+                    "verdict": "tie",
+                    "reason": "Both answers satisfy the rubric with equal precision.",
+                }
             )
         elif len_a > len_b:
             return json.dumps(
-                {"verdict": "A", "reason": "Answer A is more comprehensive and adheres strictly to the required rubric."}
+                {
+                    "verdict": "A",
+                    "reason": "Answer A is more comprehensive and adheres strictly to the required rubric.",
+                }
             )
         else:
             return json.dumps(
-                {"verdict": "B", "reason": "Answer B is more comprehensive and adheres strictly to the required rubric."}
+                {
+                    "verdict": "B",
+                    "reason": "Answer B is more comprehensive and adheres strictly to the required rubric.",
+                }
             )

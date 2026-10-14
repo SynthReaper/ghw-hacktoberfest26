@@ -2,11 +2,9 @@
 
 import json
 from pathlib import Path
-import pytest
 
 from openswitch.report import (
     escape,
-    generate_pareto_svg,
     generate_report_files,
     generate_standalone_html,
 )
@@ -60,7 +58,7 @@ def test_generate_standalone_html_no_external_resources():
                 "idx": 4,
                 "input": "<b>urgent input</b>",
                 "reference": "<script>alert(1)</script>",
-                "candidate_output": "\"><img src=x>",
+                "candidate_output": '"><img src=x>',
                 "reason": "Failed extraction",
             }
         ],
@@ -94,7 +92,7 @@ def test_generate_standalone_html_no_external_resources():
     assert "https://cdn." not in html_out
     assert "http://" not in html_out or "http://www.w3.org" in html_out  # SVG namespace allowed
     assert "<script src=" not in html_out
-    assert "<link rel=\"stylesheet\" href=\"http" not in html_out
+    assert '<link rel="stylesheet" href="http' not in html_out
 
 
 def test_generate_report_files(tmp_path: Path):
@@ -102,7 +100,11 @@ def test_generate_report_files(tmp_path: Path):
     mock_data = {
         "experiment_id": "exp-test",
         "dataset_name": "Bank77",
-        "recommendation": {"decision": "no_safe_switch", "headline": "No Switch", "details": "Below threshold"},
+        "recommendation": {
+            "decision": "no_safe_switch",
+            "headline": "No Switch",
+            "details": "Below threshold",
+        },
     }
     html_file = tmp_path / "report.html"
     json_file = tmp_path / "report.json"

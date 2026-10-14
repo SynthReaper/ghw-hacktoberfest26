@@ -1,10 +1,9 @@
 """Interactive and programmatic blind judge calibration flow (T-023)."""
 
-from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
-import json
 import logging
 import random
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 from sqlalchemy import select

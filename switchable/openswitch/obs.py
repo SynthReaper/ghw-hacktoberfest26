@@ -30,7 +30,7 @@ def scrub_dict(data: Any) -> Any:
     return data
 
 
-def sentry_event_scrubber(event: dict[str, Any], hint: dict[str, Any]) -> dict[str, Any]:
+def sentry_event_scrubber(event: Any, hint: dict[str, Any]) -> Any:
     """Sentry before_send hook ensuring zero secrets, prompts, or output text are transmitted."""
     # Scrub breadcrumbs
     if "breadcrumbs" in event and isinstance(event["breadcrumbs"], dict):

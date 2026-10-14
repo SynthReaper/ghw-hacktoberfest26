@@ -235,7 +235,8 @@ async def import_dataset_from_file(
     """Convenience helper to import and persist a dataset from file path."""
     importer = DatasetImporter(seed=seed, attestation_granted=attest_closed_training)
     raw_bytes = file_path.read_bytes()
-    imported = importer.import_from_bytes(raw_bytes=raw_bytes, filename=file_path.name, name=dataset_name)
+    imported = importer.import_from_bytes(
+        raw_bytes=raw_bytes, filename=file_path.name, name=dataset_name
+    )
     async with session_context() as session:
         return await importer.save_to_db(session, imported)
-

@@ -3,12 +3,13 @@
 import asyncio
 import json
 import uuid
+
 import pytest
 from httpx import ASGITransport, AsyncClient
 from sqlalchemy import select
 
 from openswitch.db import session_context
-from openswitch.models import Dataset, Example, Session, init_db
+from openswitch.models import Dataset, Session, init_db
 from openswitch.web.app import app
 from openswitch.web.events import broadcaster
 
@@ -44,6 +45,7 @@ async def test_session_cookie_creation():
 
     # Verify session persisted in SQLite
     import hashlib
+
     t_hash = hashlib.sha256(token.encode("utf-8")).hexdigest()
     async with session_context() as session:
         db_res = await session.execute(select(Session).where(Session.token_hash == t_hash))
@@ -77,7 +79,9 @@ async def test_dataset_upload_and_retrieve():
     )
 
     async with AsyncClient(transport=transport, base_url="http://test") as client:
-        files = {"file": ("test_upload.jsonl", jsonl_content.encode("utf-8"), "application/jsonlines")}
+        files = {
+            "file": ("test_upload.jsonl", jsonl_content.encode("utf-8"), "application/jsonlines")
+        }
         res = await client.post("/api/datasets?name=WebUploadDataset", files=files)
         assert res.status_code == 200
         ds_data = res.json()

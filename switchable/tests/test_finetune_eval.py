@@ -2,6 +2,7 @@
 
 import json
 import uuid
+
 import pytest
 from sqlalchemy import select
 
@@ -16,9 +17,30 @@ from openswitch.models import Dataset, Example, FineTune
 async def test_knearest_fewshot_selection():
     """Verify TF-IDF cosine similarity selects most relevant examples."""
     train_exs = [
-        Example(id="1", dataset_id="ds", idx=0, split="train", input="password reset issue", reference="account"),
-        Example(id="2", dataset_id="ds", idx=1, split="train", input="refund for charged fee", reference="billing"),
-        Example(id="3", dataset_id="ds", idx=2, split="train", input="change account email", reference="account"),
+        Example(
+            id="1",
+            dataset_id="ds",
+            idx=0,
+            split="train",
+            input="password reset issue",
+            reference="account",
+        ),
+        Example(
+            id="2",
+            dataset_id="ds",
+            idx=1,
+            split="train",
+            input="refund for charged fee",
+            reference="billing",
+        ),
+        Example(
+            id="3",
+            dataset_id="ds",
+            idx=2,
+            split="train",
+            input="change account email",
+            reference="account",
+        ),
     ]
     selector = KNearestFewShot(train_examples=train_exs, k=2)
 
@@ -94,16 +116,70 @@ async def test_run_finetune_vs_kshot_full_pipeline():
         session.add(ds)
 
         # 3 train rows (train_allowed=True)
-        t1 = Example(id=f"{ds_id}_t1", dataset_id=ds_id, idx=0, split="train", input="card stolen cancel", reference=json.dumps({"category": "card", "priority": "high"}), reference_source="open_model", train_allowed=True)
-        t2 = Example(id=f"{ds_id}_t2", dataset_id=ds_id, idx=1, split="train", input="app crash on startup", reference=json.dumps({"category": "bug", "priority": "medium"}), reference_source="open_model", train_allowed=True)
-        t3 = Example(id=f"{ds_id}_t3", dataset_id=ds_id, idx=2, split="train", input="billing error fee", reference=json.dumps({"category": "billing", "priority": "high"}), reference_source="open_model", train_allowed=True)
+        t1 = Example(
+            id=f"{ds_id}_t1",
+            dataset_id=ds_id,
+            idx=0,
+            split="train",
+            input="card stolen cancel",
+            reference=json.dumps({"category": "card", "priority": "high"}),
+            reference_source="open_model",
+            train_allowed=True,
+        )
+        t2 = Example(
+            id=f"{ds_id}_t2",
+            dataset_id=ds_id,
+            idx=1,
+            split="train",
+            input="app crash on startup",
+            reference=json.dumps({"category": "bug", "priority": "medium"}),
+            reference_source="open_model",
+            train_allowed=True,
+        )
+        t3 = Example(
+            id=f"{ds_id}_t3",
+            dataset_id=ds_id,
+            idx=2,
+            split="train",
+            input="billing error fee",
+            reference=json.dumps({"category": "billing", "priority": "high"}),
+            reference_source="open_model",
+            train_allowed=True,
+        )
 
         # 1 dev row
-        d1 = Example(id=f"{ds_id}_d1", dataset_id=ds_id, idx=3, split="dev", input="lost card urgent", reference=json.dumps({"category": "card", "priority": "high"}), reference_source="open_model", train_allowed=False)
+        d1 = Example(
+            id=f"{ds_id}_d1",
+            dataset_id=ds_id,
+            idx=3,
+            split="dev",
+            input="lost card urgent",
+            reference=json.dumps({"category": "card", "priority": "high"}),
+            reference_source="open_model",
+            train_allowed=False,
+        )
 
         # 2 test rows
-        te1 = Example(id=f"{ds_id}_te1", dataset_id=ds_id, idx=4, split="test", input="card lost please block", reference=json.dumps({"category": "card", "priority": "high"}), reference_source="open_model", train_allowed=False)
-        te2 = Example(id=f"{ds_id}_te2", dataset_id=ds_id, idx=5, split="test", input="application crashed again", reference=json.dumps({"category": "bug", "priority": "medium"}), reference_source="open_model", train_allowed=False)
+        te1 = Example(
+            id=f"{ds_id}_te1",
+            dataset_id=ds_id,
+            idx=4,
+            split="test",
+            input="card lost please block",
+            reference=json.dumps({"category": "card", "priority": "high"}),
+            reference_source="open_model",
+            train_allowed=False,
+        )
+        te2 = Example(
+            id=f"{ds_id}_te2",
+            dataset_id=ds_id,
+            idx=5,
+            split="test",
+            input="application crashed again",
+            reference=json.dumps({"category": "bug", "priority": "medium"}),
+            reference_source="open_model",
+            train_allowed=False,
+        )
 
         session.add_all([t1, t2, t3, d1, te1, te2])
         await session.commit()

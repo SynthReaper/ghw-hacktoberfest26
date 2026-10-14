@@ -1,23 +1,20 @@
 """End-to-end evaluation pipeline comparing zero-shot, k-shot, and Tinker LoRA fine-tuning."""
 
-import asyncio
-from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
 import json
 import logging
 import uuid
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from typing import Any
 
 from sqlalchemy import select
 
-from openswitch.datasets.provenance import ProvenanceViolationError
 from openswitch.datasets.regen import enforce_strict_provenance_guard
 from openswitch.db import session_context
 from openswitch.finetune.kshot import KNearestFewShot
 from openswitch.finetune.tinker import Hyperparameters, TinkerFineTuner
 from openswitch.metrics.field_accuracy import evaluate_field_accuracy
 from openswitch.models import Example, Experiment, FineTune
-from openswitch.providers.base import ChatProvider, ChatResult
 from openswitch.providers.fake import RealisticTaskProvider
 from openswitch.providers.registry import registry
 from openswitch.stats import bootstrap_ci
@@ -74,8 +71,8 @@ class FinetuneComparisonReport:
             "| :--- | :--- | :--- | :--- | :--- | :--- | :--- |",
         ]
         for c in self.candidates:
-            ci_str = f"{c.accuracy_mean*100:.1f}% [{c.accuracy_ci_low*100:.1f}%, {c.accuracy_ci_high*100:.1f}%]"
-            lat_str = f"{c.avg_latency_s*1000:.0f}ms"
+            ci_str = f"{c.accuracy_mean * 100:.1f}% [{c.accuracy_ci_low * 100:.1f}%, {c.accuracy_ci_high * 100:.1f}%]"
+            lat_str = f"{c.avg_latency_s * 1000:.0f}ms"
             cost_str = f"${c.cost_per_1k_usd:.4f}"
             train_str = f"${c.training_cost_usd:.2f}" if c.training_cost_usd > 0 else "$0.00"
             lines.append(
@@ -122,7 +119,11 @@ async def run_finetune_vs_kshot(
 
         # Select k using base provider (or RealisticTaskProvider if in simulation)
         task_cfg = {"type": "extraction"}
-        base_provider = registry.get(base_model) if base_model in registry else RealisticTaskProvider(model_key=base_model, task_config=task_cfg)
+        base_provider = (
+            registry.get(base_model)
+            if base_model in registry
+            else RealisticTaskProvider(model_key=base_model, task_config=task_cfg)
+        )
 
         for k_val in [3, 5, 8]:
             k_correct = 0
@@ -141,7 +142,7 @@ async def run_finetune_vs_kshot(
             dev_scores[k_val] = k_correct / max(1, min(15, len(dev_rows)))
             logger.info(f"Dev split evaluation: k={k_val} score={dev_scores[k_val]:.3f}")
 
-        best_k = max(dev_scores, key=dev_scores.get)
+        best_k = max(dev_scores, key=lambda k: dev_scores[k])
         logger.info(f"Selected optimal k={best_k} on dev split.")
 
     # 2. Run Tinker fine-tune on train split
@@ -195,7 +196,11 @@ async def run_finetune_vs_kshot(
 
     # Candidate providers with realistic calibration profiles
     task_cfg = {"type": "extraction"}
-    base_provider = registry.get(base_model) if base_model in registry else RealisticTaskProvider(model_key="llama-3b-local", task_config=task_cfg)
+    base_provider = (
+        registry.get(base_model)
+        if base_model in registry
+        else RealisticTaskProvider(model_key="llama-3b-local", task_config=task_cfg)
+    )
     kshot_provider = RealisticTaskProvider(model_key="bb-qwen-7b", task_config=task_cfg)
     finetuned_provider = RealisticTaskProvider(model_key="gemma-9b-local", task_config=task_cfg)
 
@@ -306,21 +311,21 @@ async def run_finetune_vs_kshot(
     if cand_ft.accuracy_ci_low > cand_kshot.accuracy_ci_high:
         recommendation = (
             f"LoRA fine-tuning clearly outperforms {best_k}-shot "
-            f"({cand_ft.accuracy_mean*100:.1f}% vs {cand_kshot.accuracy_mean*100:.1f}%) "
+            f"({cand_ft.accuracy_mean * 100:.1f}% vs {cand_kshot.accuracy_mean * 100:.1f}%) "
             f"with non-overlapping 95% CIs. Fine-tuning also saves ${cand_kshot.cost_per_1k_usd - cand_ft.cost_per_1k_usd:.3f} "
             f"per 1k requests by avoiding prompt inflation. Break-even at ~{breakeven_vol:,} requests."
         )
     elif cand_kshot.accuracy_ci_low >= 0.85:
         recommendation = (
-            f"{best_k}-shot baseline is sufficient for production ({cand_kshot.accuracy_mean*100:.1f}% >= 85% threshold). "
-            f"Fine-tuning achieves {cand_ft.accuracy_mean*100:.1f}% but adds operational complexity. "
+            f"{best_k}-shot baseline is sufficient for production ({cand_kshot.accuracy_mean * 100:.1f}% >= 85% threshold). "
+            f"Fine-tuning achieves {cand_ft.accuracy_mean * 100:.1f}% but adds operational complexity. "
             f"Adopt k-shot for low volume; fine-tune only if volume exceeds {breakeven_vol:,} requests/month."
         )
     else:
         recommendation = (
             f"LoRA fine-tuning is required to meet the 85% reliability threshold "
-            f"(LoRA: {cand_ft.accuracy_mean*100:.1f}% [{cand_ft.accuracy_ci_low*100:.1f}%, {cand_ft.accuracy_ci_high*100:.1f}%] vs "
-            f"{best_k}-shot: {cand_kshot.accuracy_mean*100:.1f}%). Break-even reached at ~{breakeven_vol:,} requests."
+            f"(LoRA: {cand_ft.accuracy_mean * 100:.1f}% [{cand_ft.accuracy_ci_low * 100:.1f}%, {cand_ft.accuracy_ci_high * 100:.1f}%] vs "
+            f"{best_k}-shot: {cand_kshot.accuracy_mean * 100:.1f}%). Break-even reached at ~{breakeven_vol:,} requests."
         )
 
     return FinetuneComparisonReport(
