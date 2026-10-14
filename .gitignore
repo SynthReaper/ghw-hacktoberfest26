@@ -37,3 +37,13 @@ desktop.ini
 .env
 .env.*
 *.secret
+
+# Private Documentation, Evidence & Templates (Local only - keep private)
+docs/
+**/docs/
+templates/
+**/templates/
+evidence/
+**/evidence/
+state/
+**/state/

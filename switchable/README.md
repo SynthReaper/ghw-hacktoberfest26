@@ -6,9 +6,9 @@
 [![Coverage: 95%](https://img.shields.io/badge/coverage-95%25-brightgreen.svg)](tests/)
 [![Security: pip--audit 0 vuln](https://img.shields.io/badge/security-pip--audit%20clean-success.svg)](openswitch/security.py)
 
-> **Built during Hacktoberfest 2026 Week 2 ("Side Hustle" Challenge)**  
-> *Development window: Started October 14, 2026. All code created between October 12–18, 2026.*  
-> **Live Demo**: [https://openswitch.tech](https://openswitch.tech) (or `open-switch.onrender.com`)
+> **Built for Hacktoberfest 2026 Week 2 ("Side Hustle" Challenge)**  
+> *Autonomous LLM Migration Audit Engine*  
+> **Execution Mode**: 100% Offline Local Engine (Ollama) & Self-Hosted Container.
 
 ---
 
@@ -154,7 +154,7 @@ docker build -t open-switch .
 docker run -p 8000:8000 -v $(pwd)/var_data:/var/data open-switch
 ```
 
-Deploy to Render via Blueprint with persistent disk mounted at `/var/data` (see [`docs/deployment-and-domain.md`](docs/deployment-and-domain.md)).
+Deploy via Blueprint with persistent disk mounted at `/var/data` using [`render.yaml`](render.yaml) and [`Dockerfile`](Dockerfile).
 
 ---
 
@@ -170,15 +170,15 @@ Deploy to Render via Blueprint with persistent disk mounted at `/var/data` (see 
 
 ## 🤝 Partner Technology Integrations
 
-| Partner | Role in Open-Switch | Evidence File |
+| Partner | Role in Open-Switch | Implementation / Source |
 |---|---|---|
-| **Google Gemma 2** | Flagship open model family across local (Ollama) and cloud inference | `docs/adr/0002-gemma-flagship-model-strategy.md` |
-| **DigitalOcean** | GenAI Serverless inference (Llama 3.1 8B, 70B, Mistral 7B) | `docs/evidence/final/models-probe.txt` |
-| **Backboard** | Unified multi-provider inference routing (Qwen 2.5 7B) | `docs/evidence/final/models-probe.txt` |
-| **Tinker** | Low-level distributed LoRA fine-tuning and weight export | `docs/evidence/final/task-b-finetune-vs-kshot.json` |
-| **Render** | Docker Blueprint deployment with persistent disk | `render.yaml` & `Dockerfile` |
-| **Sentry** | Distributed `gen_ai` span instrumentation and scrubber | `openswitch/obs.py` |
-| **.tech Domains** | Production custom domain configuration | `docs/deployment-and-domain.md` |
+| **Google Gemma 2** | Flagship open model family across local (Ollama) and open teacher regeneration | [`specs/models.yaml`](specs/models.yaml) & Ollama |
+| **DigitalOcean** | GenAI Serverless inference (Llama 3.1 8B, 70B, Mistral 7B) | [`openswitch/providers/digitalocean.py`](openswitch/providers/digitalocean.py) |
+| **Backboard** | Unified multi-provider inference routing (Qwen 2.5 7B) | [`openswitch/providers/backboard.py`](openswitch/providers/backboard.py) |
+| **Tinker** | Low-level distributed LoRA fine-tuning and weight export | [`openswitch/train/tinker.py`](openswitch/train/tinker.py) |
+| **Render** | Docker Blueprint deployment with persistent disk | [`render.yaml`](render.yaml) & [`Dockerfile`](Dockerfile) |
+| **Sentry** | Distributed `gen_ai` span instrumentation and scrubber | [`openswitch/obs.py`](openswitch/obs.py) |
+| **.tech Domains** | Custom domain configuration ready for self-hosted deployment | [`openswitch/config.py`](openswitch/config.py) |
 
 ---
 

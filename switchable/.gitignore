@@ -1,12 +1,19 @@
-# Environment & Secrets
+# Environment & Secrets (Local only)
 .env
 *.env
 .env.*
 !.env.example
+*.secret
 
-# Python
+# Private Documentation, Evidence & Templates (Local only - keep private)
 docs/
+**/docs/
 templates/
+**/templates/
+evidence/
+**/evidence/
+state/
+**/state/
 
 # Python
 __pycache__/
@@ -52,6 +59,3 @@ htmlcov/
 .idea/
 .DS_Store
 Thumbs.db
-
-# Sensitive local run data
-docs/evidence/cache/
