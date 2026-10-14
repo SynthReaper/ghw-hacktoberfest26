@@ -5,6 +5,10 @@
 !.env.example
 
 # Python
+docs/
+templates/
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
