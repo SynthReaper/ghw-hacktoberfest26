@@ -123,8 +123,8 @@ No API keys or cloud spend required. Data never leaves your workstation:
 
 ```bash
 # 1. Install Open-Switch
-git clone https://github.com/adityagoyal/open-switch.git
-cd open-switch
+git clone https://github.com/SynthReaper/ghw-hacktoberfest26.git
+cd ghw-hacktoberfest26/switchable
 pip install -e .
 
 # 2. Pull open models in Ollama
