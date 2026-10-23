@@ -1,0 +1,44 @@
+date,vendor,amount,description,tax_category,is_deductible
+2026-01-15,Pacific Gas & Electric,142.50,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-01-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-01-20,AWS Cloud Infrastructure,312.40,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-01-22,GitHub Enterprise,42.00,Team developer seats and code repository licensing,Schedule C: Line 18 Office Expense,true
+2026-01-25,Google Workspace,36.00,Domain business email and shared drive collaboration,Schedule C: Line 18 Office Expense,true
+2026-01-28,Google Ads,450.00,Targeted search engine marketing for SaaS launch,Schedule C: Line 8 Advertising,true
+2026-01-30,WeWork Coworking,550.00,Dedicated desk and team conference room monthly lease,Schedule C: Line 20 Rent or Lease,true
+2026-02-14,Pacific Gas & Electric,148.20,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-02-17,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-02-21,AWS Cloud Infrastructure,328.15,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-02-23,Vercel Pro,40.00,Edge web deployment and Next.js frontend hosting,Schedule C: Line 18 Office Expense,true
+2026-02-26,Meta Ads,380.00,Social media paid acquisition and retargeting campaigns,Schedule C: Line 8 Advertising,true
+2026-02-28,Uber Business,45.20,Ground transportation rideshare to client product demo,Schedule C: Line 24b Travel & Meals,true
+2026-03-15,Pacific Gas & Electric,139.80,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-03-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-03-20,AWS Cloud Infrastructure,319.50,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-03-24,OpenAI API Platform,85.60,LLM token generation inference and embeddings API,Schedule C: Line 18 Office Expense,true
+2026-03-28,Google Ads,480.00,Targeted search engine marketing for SaaS launch,Schedule C: Line 8 Advertising,true
+2026-03-31,WeWork Coworking,550.00,Dedicated desk and team conference room monthly lease,Schedule C: Line 20 Rent or Lease,true
+2026-04-10,CPA Associates LLP,350.00,Quarterly business tax advisory and compliance review,Schedule C: Line 17 Legal & Professional Services,true
+2026-04-15,Pacific Gas & Electric,144.10,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-04-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-04-22,AWS Cloud Infrastructure,335.80,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-04-25,Notion Team,24.00,Knowledge base documentation and sprint planning tools,Schedule C: Line 18 Office Expense,true
+2026-04-29,Dev.to Sponsorship,250.00,Sponsored technical article and developer community blast,Schedule C: Line 8 Advertising,true
+2026-05-15,Pacific Gas & Electric,151.30,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-05-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-05-21,AWS Cloud Infrastructure,340.10,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-05-24,Anthropic Claude API,68.40,Model API inference tokens and prompt testing,Schedule C: Line 18 Office Expense,true
+2026-05-30,WeWork Coworking,550.00,Dedicated desk and team conference room monthly lease,Schedule C: Line 20 Rent or Lease,true
+2026-06-15,Pacific Gas & Electric,146.90,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-06-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-06-22,AWS Cloud Infrastructure,325.00,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-06-27,Google Ads,420.00,Search advertising for product signups,Schedule C: Line 8 Advertising,true
+2026-07-15,Pacific Gas & Electric,155.00,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-07-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-07-22,AWS Cloud Infrastructure,330.40,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-08-15,Pacific Gas & Electric,152.80,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-08-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-08-22,AWS Cloud Infrastructure,342.90,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true
+2026-09-15,Pacific Gas & Electric,149.10,Monthly commercial electricity & gas utility,Schedule C: Line 25 Utilities,true
+2026-09-18,Verizon Fios Business,89.99,High-speed gigabit fiber internet office connection,Schedule C: Line 25 Utilities,true
+2026-09-22,AWS Cloud Infrastructure,338.20,Elastic compute ec2 and s3 storage backend hosting,Schedule C: Line 18 Office Expense,true

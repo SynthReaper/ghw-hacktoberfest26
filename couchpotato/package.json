@@ -1,0 +1,34 @@
+{
+  "name": "couchpotato-expenses",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CouchPotato Expenses — Zero-Click Invoice & Receipt Hunter for Hacktoberfest Week 3 (Slow and Steady)",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --parallel --filter couchpotato-agent --filter couchpotato-web dev",
+    "build": "pnpm --filter couchpotato-web build",
+    "test": "pnpm --recursive test",
+    "test:gemma": "pnpm --filter couchpotato-agent test:gemma",
+    "test:workflow": "pnpm --filter couchpotato-agent test:workflow",
+    "test:tabpfn": "pytest services/tabpfn-service/test_tabpfn.py -v",
+    "agent:hunt": "pnpm --filter couchpotato-agent hunt",
+    "web:dev": "pnpm --filter couchpotato-web dev",
+    "agent:dev": "pnpm --filter couchpotato-agent dev",
+    "services:tabpfn": "python services/tabpfn-service/server.py"
+  },
+  "keywords": [
+    "hacktoberfest",
+    "agent",
+    "gemma",
+    "tabpfn",
+    "stagehand",
+    "browserbase",
+    "mastra",
+    "sentry",
+    "privacy-first"
+  ],
+  "author": "Antigravity Team",
+  "license": "MIT"
+}

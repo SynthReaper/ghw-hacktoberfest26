@@ -33,6 +33,19 @@ desktop.ini
 *.swp
 *.swo
 
+# Node & Web Build Artifacts
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+dist/
+**/dist/
+out/
+**/out/
+build/
+**/build/
+.turbo/
+
 # Environment Variables & Secrets
 .env
 .env.*
