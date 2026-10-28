@@ -1,0 +1,33 @@
+{
+  "name": "necrogit",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NecroGit — The Open-Source Séance & Zombie Code Necromancer for Hacktoberfest Week 4 (Ghost in the Machine)",
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "pnpm --parallel --filter necrogit-agent --filter necrogit-web dev",
+    "web:dev": "pnpm --filter necrogit-web dev",
+    "agent:dev": "pnpm --filter necrogit-agent dev",
+    "build": "pnpm --filter necrogit-web build",
+    "test": "pnpm --filter necrogit-agent test",
+    "test:tabpfn": "pytest services/tabpfn-service/test_tabpfn.py -v",
+    "agent:seance": "pnpm --filter necrogit-agent seance",
+    "services:tabpfn": "python services/tabpfn-service/server.py"
+  },
+  "keywords": [
+    "hacktoberfest",
+    "ghost-in-the-machine",
+    "agent",
+    "gemma2",
+    "tabpfn",
+    "browserbase",
+    "stagehand",
+    "elevenlabs",
+    "mastra",
+    "sentry"
+  ],
+  "author": "Antigravity Team",
+  "license": "MIT"
+}

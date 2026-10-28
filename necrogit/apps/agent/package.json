@@ -1,0 +1,23 @@
+{
+  "name": "necrogit-agent",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NecroGit Mastra Agent Backend — Multi-Step Open-Source Code Necromancer",
+  "main": "dist/index.js",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "seance": "tsx src/index.ts --seance",
+    "test": "tsx --test tests/*.test.ts"
+  },
+  "dependencies": {
+    "@mastra/core": "^0.1.26",
+    "@sentry/node": "^8.38.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
